@@ -11,6 +11,9 @@ COLORS = cycle(['red', 'blue', 'green', 'magenta', 'yellow'])
 
 
 class PerspectiveCube:
+    '''
+    This class is use to generate the 3D box onto canvas.
+    '''
     def __init__(self, canvas, width, height, locX, locY):
         self.canvas = canvas
         self.polygons = []
@@ -31,9 +34,20 @@ class PerspectiveCube:
         self.update_screen(locX, locY)  # initial point
 
     def _on_clickndrag(self, event):
+        '''
+        This function will update screeen when user drag the mouse on canvas.
+        :param event: event
+        :return: None
+        '''
         self.update_screen(event.x, event.y)
 
     def update_screen(self, x=None, y=None):
+        '''
+        Updating screen with change in x and y direction
+        :param x: x coordinate in pixel
+        :param y: y coordinate in pixel
+        :return: None
+        '''
         if x is not None:
             self.x = x
         if y is not None:
@@ -62,6 +76,9 @@ class PerspectiveCube:
 
 
 class CanvasEvents3D:
+    '''
+    this class will draw 2D box first and then called PerspectiveCube to generate 3D box.
+    '''
     def __init__(self, c):
         canvas = c
         canvas.pack()
@@ -77,6 +94,11 @@ class CanvasEvents3D:
         self.drawnText3 = None
 
     def onStart(self, event):
+        '''
+        initial the value
+        :param event: event
+        :return: none
+        '''
         self.start = event
         self.drawn = None
         self.drawnText1 = None
@@ -84,6 +106,11 @@ class CanvasEvents3D:
         self.drawnText3 = None
 
     def onGrow(self, event):
+        '''
+        This function will delete the old canvas and redraw them when user increase or decrease the size of the box.
+        :param event: Event
+        :return: none
+        '''
         canvas = event.widget
         if self.drawn: canvas.delete(self.drawn)
         objectId = canvas.create_rectangle(self.start.x, self.start.y, event.x, event.y, outline='red', tag="box")
@@ -122,9 +149,19 @@ class CanvasEvents3D:
         self.drawnText3 = textId4
 
     def onClear(self, event):
+        '''
+        Clear all boxes on screen
+        :param event: event
+        :return: None
+        '''
         event.widget.delete('box')
 
     def onMove(self, event):
+        '''
+        this function allow use to adjust the position of the box
+        :param event: event
+        :return: none
+        '''
         if self.drawn:
             if trace: print
             self.drawn
@@ -134,6 +171,11 @@ class CanvasEvents3D:
             self.start = event
 
     def onRelease(self, event):
+        '''
+        This function will be called when user release the mouse it will called PerspectiveCube to generate 3D box.
+        :param event:
+        :return:
+        '''
         width = event.x - self.start.x
         height = event.y - self.start.y
         print("width: ", width, " height: ", height)
@@ -144,8 +186,15 @@ class CanvasEvents3D:
         PerspectiveCube(self.canvas, width, height, locX, locY)
 
 
-class CanvasEvents:
+class CanvasEvents2D:
+    '''
+    this class will generate 2D box on canvas image.
+    '''
     def __init__(self, c):
+        '''
+        initialize values
+        :param c: canvas
+        '''
         canvas = c
         canvas.pack()
         canvas.bind('<ButtonPress-1>', self.onStart)
@@ -162,6 +211,11 @@ class CanvasEvents:
         self.diffY = 0
 
     def onStart(self, event):
+        '''
+        initialize starting point
+        :param event: event
+        :return: None
+        '''
         self.start = event
         self.drawn = None
         self.drawnText1 = None
@@ -170,6 +224,11 @@ class CanvasEvents:
         self.drawnText4 = None
 
     def onGrow(self, event):
+        '''
+        This function will delete the old canvas and redraw them when user increase or decrease the size of the box.
+        :param event: Event
+        :return: none
+        '''
         canvas = event.widget
         if self.drawn:
             canvas.delete(self.drawn)
@@ -214,9 +273,19 @@ class CanvasEvents:
         self.drawnText4 = textId4
 
     def onClear(self, event):
+        '''
+        Clear all boxes on screen
+        :param event: event
+        :return: None
+        '''
         event.widget.delete('box')
 
     def onMove(self, event):
+        '''
+        this function allow use to adjust the position of the box
+        :param event: event
+        :return: none
+        '''
         if self.drawn:
             if trace: print
             self.drawn
@@ -232,6 +301,9 @@ class CanvasEvents:
 
 
 class CanvasWindow():
+    '''
+    this class will create the new window to display the picture
+    '''
     def __init__(self, new_window, f):
         self.canvas = Canvas(new_window, width=1800, height=1800)
         self.images = []
@@ -245,16 +317,13 @@ class CanvasWindow():
         self.image_on_canvas = self.canvas.create_image(0, 0, image=self.images[self.counter], anchor=NW)
         self.canvas.bind_all("<Key>", self.key)
         self.canvas.pack()
-        self.eventC = CanvasEvents(self.canvas)
+        self.eventC = CanvasEvents2D(self.canvas)
         print("box: ", self.boxes)
-
-
-
 
         menu = Menu(new_window)
         new_item = Menu(menu)
-        new_item.add_command(label='2D', command=CanvasEvents(self.canvas))
-        new_item.add_command(label='3D', command=CanvasEvents3D(self.canvas))
+        new_item.add_command(label='2D', command=CanvasEvents2D(self.canvas)) #create the command bar for 2D
+        new_item.add_command(label='3D', command=CanvasEvents3D(self.canvas)) #create the command bar for 3D
         menu.add_cascade(label='Tool', menu=new_item)
         new_window.config(menu=menu)
 
@@ -262,6 +331,9 @@ class CanvasWindow():
         kp = repr(event.char)
         command = str(kp[2:-1])
         if command == "uf702":
+            '''
+            If use press left arrow
+            '''
             if self.boxes[self.counter] != "":
                 self.canvas.itemconfig(self.boxes[self.counter+1], rectangle=self.boxes[self.counter])
             if self.counter != 0:
@@ -271,6 +343,9 @@ class CanvasWindow():
                 self.boxes[self.counter] = self.eventC.drawn
             print("left arrow")
         elif command == "uf703":
+            '''
+            if user press right arrow
+            '''
             if self.boxes[self.counter] != "":
                 self.canvas.itemconfig(self.boxes[self.counter-1], rectangle=self.boxes[self.counter])
             print("counter " + str(self.counter))
@@ -288,17 +363,6 @@ def main():
     window.geometry('350x200')
 
     def clicked():
-
-        # def key(event):
-        #     kp = repr(event.char)
-        #     command = str(kp[2:-1])
-        #     if command == "uf702":
-        #         print("left arrow")
-        #     elif command == "uf703":
-        #         print("right arrow")
-        #         image = PhotoImage(file=f[1])
-        #         canvas.create_image(0, 0, image=image, anchor=NW)
-
         f = tkinter.filedialog.askopenfilenames(
             parent=window,
             title='Choose file',
@@ -310,26 +374,6 @@ def main():
 
         new_window = tkinter.Toplevel(window)
         CanvasWindow(new_window, f)
-        # image = PhotoImage(file=f[0])
-        # images = []
-        # for i in range(len(f)):
-        #     images.append(PhotoImage(file=f[i]))
-        # counter = 0
-        # canvas = Canvas(new_window, width=1800, height=1800)
-        # canvas.create_image(0, 0, image=images[0], anchor=NW)
-        # canvas.bind_all("<Key>", key)
-        # canvas.pack()
-        # label = Label(new_window, text="Click and Drag to See the Shape", background='black', foreground='white')
-        # label.pack()
-        # CanvasEvents(canvas)
-
-        # menu = Menu(new_window)
-        # new_item = Menu(menu)
-        # new_item.add_command(label='2D', command=CanvasEvents(canvas))
-        # new_item.add_command(label='3D', command=CanvasEvents3D(canvas))
-        # menu.add_cascade(label='Tool', menu=new_item)
-        # new_window.config(menu=menu)
-
         new_window.mainloop()
 
     b1 = tkinter.Button(window, text='Choose File', command=clicked)
@@ -340,3 +384,10 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+'''
+reference:
+https://github.com/novel-yet-trivial/Tkinter3DExperiment/blob/28e59802d1e602d8a6b3f201bf36052364669ff5/OnePointPerspectiveCube.py
+http://www.java2s.com/Code/Python/GUI-Tk/Usemousetodrawashapeoncanvas.htm
+'''
