@@ -2,23 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/COPYING" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/README" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/canvas3d.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/canvas3d.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/conf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/index.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/math3d.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/scene.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/math3d.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/neat_demo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tkinter3D-master/scene.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/quinn_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/AnnotationTool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AnnotationTool.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/ADMIN.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/COPYING" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/README" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/canvas3d.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/canvas3d.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/conf.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/index.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/math3d.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/doc/sphinx/scene.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/math3d.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/neat_demo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tkinter3D-master/scene.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/quinn_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/quinn_test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,6 +42,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -104,6 +105,10 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.app" />
+      <item itemvalue="Python.quinn_test" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.quinn_test" />
@@ -124,8 +129,16 @@
       <workItem from="1569001924660" duration="699000" />
       <workItem from="1569003997903" duration="179000" />
       <workItem from="1569004677629" duration="1519000" />
-      <workItem from="1569256110170" duration="1033000" />
+      <workItem from="1569256110170" duration="7719000" />
     </task>
+    <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
+      <created>1569257199843</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1569257199844</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,9 +159,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Added experimental GNU GPL Tinker 3D Library" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added experimental GNU GPL Tinker 3D Library" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test.coverage" NAME="quinn_test Coverage Results" MODIFIED="1569256856360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test.coverage" NAME="quinn_test Coverage Results" MODIFIED="1569264144711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569004971770" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$neat_demo.coverage" NAME="neat_demo Coverage Results" MODIFIED="1569258115619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tkinter3D-master" />
   </component>
 </project>
