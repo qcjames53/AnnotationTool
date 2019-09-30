@@ -1,6 +1,7 @@
 import vpython
 import math
 import random
+from enum import Enum
 
 # world constants
 image_resolution = (720,480)
@@ -17,11 +18,25 @@ camera_fov_stored = 0
 initial_camera_pitch = 210
 initial_camera_fov = 39
 
-bounding_box_label_offset = vpython.vector(0, 0, 0)
+bounding_box_label_offset = vpython.vector(5, 10, 0)
 bounding_box_opacity = 0.25
 bounding_box_selected_opacity = 0.5
-boxes = []
-selected_bounding_box = 0
+bounding_box_corner_size = 1
+bounding_box_corner_color = vpython.color.red
+boxes = [None] #contains None to start at index 1
+selected_bounding_box = 1
+
+
+class MouseState(Enum):
+    IDLE = 0
+    TRANSLATE = 1
+    HEIGHT = 2
+    WIDTH = 3
+    DEPTH = 4
+
+
+mouseState = MouseState.IDLE
+
 
 class BoundingBox:
     '''
@@ -30,39 +45,74 @@ class BoundingBox:
     def __init__(self, pos, rotation, length, width, height, index, color_value, object_type):
         self.index = index
         self.object_type = object_type
-        self.rotation = rotation
-        self.outer_box = vpython.box(pos=(pos),
-                                     length=length, height=height, width=width,
-                                     color=color_value, opacity=bounding_box_opacity)
-        self.label = vpython.label(pos=(self.outer_box.pos + bounding_box_label_offset), text=object_type + " " + str(index), xoffset=20, yoffset=50)
+        self.c1 = pos
+        self.c2 = vpython.vector(self.c1.x - length, self.c1.y,  self.c1.z)
+        self.c3 = vpython.vector(self.c1.x, self.c1.y,  self.c1.z + width)
+        self.c4 = vpython.vector(self.c1.x, self.c1.y + height, self.c1.z)
+        self.center = vpython.vector(self.c1.x - length/2, self.c1.y + height/2,  self.c1.z + width/2)
+        self.rotation = 0
+        self.s_key = float("0.00"+str(index))
+        self.outer_box = vpython.box(pos=self.center,
+                                     length=(self.c2.x-self.c1.x), height=(self.c4.y-self.c1.y), width=(self.c3.z-self.c1.z),
+                                     color=color_value, opacity=bounding_box_opacity, pickable=True, shininess=self.s_key)
+        self.label = vpython.label(pos=self.center, text=object_type + " " + str(index),
+                                   xoffset=bounding_box_label_offset.x, yoffset=bounding_box_label_offset.y,
+                                   pickable=False)
+        # self.corner_marker_1 = vpython.box(pos=self.c1, length=bounding_box_corner_size, width=bounding_box_corner_size,
+        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
+        #                                    pickable=True, shininess=self.s_key)
+        # self.corner_marker_2 = vpython.box(pos=self.c2, length=bounding_box_corner_size, width=bounding_box_corner_size,
+        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
+        #                                    pickable=True, shininess=self.s_key)
+        # self.corner_marker_3 = vpython.box(pos=self.c3, length=bounding_box_corner_size, width=bounding_box_corner_size,
+        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
+        #                                    pickable=True, shininess=self.s_key)
+        # self.corner_marker_4 = vpython.box(pos=self.c4, length=bounding_box_corner_size, width=bounding_box_corner_size,
+        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
+        #                                    pickable=True, shininess=self.s_key)
+        self.rotate(rotation)
 
     def set_opacity(self, value):
         self.outer_box.opacity = value
 
-    def set_pos(self, pos):
-        self.outer_box.pos = pos
-        self.label.pos = self.outer_box.pos + bounding_box_label_offset
-
     def translate(self, vector):
-        self.outer_box.pos += vector
-        self.label.pos = self.outer_box.pos + bounding_box_label_offset + vector
+        # self.c1 += vector
+        # self.c2 += vector
+        # self.c3 += vector
+        # self.c4 += vector
+        self.center += vector
+
+        self.outer_box.pos = self.center
+        self.label.pos = self.center
+        # self.corner_marker_1.pos = self.c1
+        # self.corner_marker_2.pos = self.c2
+        # self.corner_marker_3.pos = self.c3
+        # self.corner_marker_4.pos = self.c4
 
     def rotate(self, degrees):
         self.rotation += degrees
-        self.outer_box.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0,1,0), origin=self.outer_box.pos)
-        self.label.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.outer_box.pos)
+        self.outer_box.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0,1,0), origin=self.center)
+        self.label.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
+        # self.corner_marker_1.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
+        # self.corner_marker_2.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
+        # self.corner_marker_3.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
+        # self.corner_marker_4.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
+
+        # self.c1 = self.corner_marker_1.pos
+        # self.c2 = self.corner_marker_2.pos
+        # self.c3 = self.corner_marker_3.pos
+        # self.c4 = self.corner_marker_4.pos
+        # self.center = self.outer_box.pos
+
 
     def rotate_to(self, yaw):
         self.rotate(degrees=(yaw - self.rotation))
 #--end of class--
 
-def instantiate_box(pos, rotation, length, width, height, object_type, color_value):
+def instantiate_box(pos=vpython.vector(0,0,0), rotation=0, length=5, width=10, height=5, object_type="Car"):
+    color_value = vpython.vector(random.random(), random.random(), random.random())
     box = BoundingBox(pos=pos, rotation=rotation, length=length, width=width, height=height, object_type=object_type, color_value=color_value, index=len(boxes))
     boxes.append(box)
-
-def instantiate_box_auto():
-    temp_color = vpython.vector(random.random(),random.random(),random.random())
-    instantiate_box(pos=vpython.vector(0,0,0), rotation=0, length=5, width=10, height=5, color_value=temp_color, object_type="Car")
 
 def draw_image():
     image_height = 4 * math.tan(scene.fov / 2) * vpython.mag(scene.center - scene.camera.pos)
@@ -123,7 +173,7 @@ def set_camera_fov(s):
 
 
 def set_bounding_box_n_1():
-    if(selected_bounding_box > 0):
+    if(selected_bounding_box > 1):
         set_bounding_box(-1)
 def set_bounding_box_1():
     if(selected_bounding_box < len(boxes)-1):
@@ -154,34 +204,65 @@ def rotate_box_1():
 def rotate_box(deg):
     boxes[selected_bounding_box].rotate(deg)
 
+
+def mouse_position_ground():
+    return scene.mouse.project(normal=vpython.vector(0,1,0))
+
+
+def mouse_down():
+    global mouseState
+    obj = scene.mouse.pick
+    if obj is None:
+        instantiate_box(pos=mouse_position_ground())
+    else:
+        index = int(str(obj.shininess)[4:])
+        #Finish this method with setting mousestates
+        #Shift: Height, Ctrl: Width (actually box length), Alt: Width (actually box depth)
+
+
+def mouse_up():
+    global mouseState
+    mouseState = MouseState.IDLE
+
+def mouse_move():
+    global mouseState
+    if mouseState == MouseState.IDLE:
+        return
+
+
 # world calibration view
-x_axis = vpython.arrow(pos=vpython.vector(-10,5,0), axis=vpython.vector(1,0,0), color=vpython.vector(1,0,0), shaftwidth=0.1, visible=False)
-y_axis = vpython.arrow(pos=vpython.vector(-10,5,0), axis=vpython.vector(0,1,0), color=vpython.vector(0,1,0), shaftwidth=0.1, visible=False)
-z_axis = vpython.arrow(pos=vpython.vector(-10,5,0), axis=vpython.vector(0,0,1), color=vpython.vector(0,0,1), shaftwidth=0.1, visible=False)
-alignment_grid_1 = vpython.arrow(pos=vpython.vector(20,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_2 = vpython.arrow(pos=vpython.vector(16,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_3 = vpython.arrow(pos=vpython.vector(12,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_4 = vpython.arrow(pos=vpython.vector(8,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_5 = vpython.arrow(pos=vpython.vector(4,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_6 = vpython.arrow(pos=vpython.vector(0,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_7 = vpython.arrow(pos=vpython.vector(-4,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_8 = vpython.arrow(pos=vpython.vector(-8,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_9 = vpython.arrow(pos=vpython.vector(-12,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_10 = vpython.arrow(pos=vpython.vector(-16,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-alignment_grid_11 = vpython.arrow(pos=vpython.vector(-20,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False)
-label_camera_pitch = vpython.label(pixel_pos=True, align="left", pos=vpython.vector(10,image_resolution[1]-15,0), text="Camera pitch: ", visible=False)
-label_camera_fov = vpython.label(pixel_pos=True, align="left", pos=vpython.vector(10,image_resolution[1]-40,0), text="Camera fov: ", visible=False)
+x_axis = vpython.arrow(pos=vpython.vector(-10,5,0), axis=vpython.vector(1,0,0), color=vpython.vector(1,0,0), shaftwidth=0.1, visible=False, pickable=False)
+y_axis = vpython.arrow(pos=vpython.vector(-10,5,0), axis=vpython.vector(0,1,0), color=vpython.vector(0,1,0), shaftwidth=0.1, visible=False, pickable=False)
+z_axis = vpython.arrow(pos=vpython.vector(-10,5,0), axis=vpython.vector(0,0,1), color=vpython.vector(0,0,1), shaftwidth=0.1, visible=False, pickable=False)
+alignment_grid_1 = vpython.arrow(pos=vpython.vector(20,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_2 = vpython.arrow(pos=vpython.vector(16,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_3 = vpython.arrow(pos=vpython.vector(12,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_4 = vpython.arrow(pos=vpython.vector(8,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_5 = vpython.arrow(pos=vpython.vector(4,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_6 = vpython.arrow(pos=vpython.vector(0,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_7 = vpython.arrow(pos=vpython.vector(-4,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_8 = vpython.arrow(pos=vpython.vector(-8,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_9 = vpython.arrow(pos=vpython.vector(-12,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_10 = vpython.arrow(pos=vpython.vector(-16,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+alignment_grid_11 = vpython.arrow(pos=vpython.vector(-20,0,0), axis=vpython.vector(0,0,20), color=vpython.vector(0,0,1), shaftwidth=0.1, headwidth=0.1, visible=False, pickable=False)
+label_camera_pitch = vpython.label(pixel_pos=True, align="left", pos=vpython.vector(10,image_resolution[1]-15,0), text="Camera pitch: ", visible=False, pickable=False)
+label_camera_fov = vpython.label(pixel_pos=True, align="left", pos=vpython.vector(10,image_resolution[1]-40,0), text="Camera fov: ", visible=False, pickable=False)
 
 # camera image display
-image = vpython.box(axis=vpython.vector(-1,0,0), shininess=(0), emissive=True, texture={'file':'/test_image.png'}, height = 1)
+image = vpython.box(axis=vpython.vector(-1,0,0), shininess=(0), emissive=True, texture={'file':'/test_image.png'}, height = 1, pickable=False)
 draw_image()
 
 #bounding box selection display
-label_box_selection = vpython.label(pixel_pos=True, align="center", pos=vpython.vector(image_resolution[0]/2,image_resolution[1]-15,0), text="Selected BB: ", visible=True)
+label_box_selection = vpython.label(pixel_pos=True, align="center", pos=vpython.vector(image_resolution[0]/2,image_resolution[1]-15,0), text="Selected Bounding Box: 0", visible=True, pickable=False)
+
+#GUI controls
+scene.bind('mousedown', mouse_down)
+scene.bind('mouseup', mouse_up)
+scene.bind('mousemove', mouse_move)
 
 #GUI elements
 scene.append_to_caption("\nBounding Box Controls:\n")
-vpython.button(bind=instantiate_box_auto, text="New")
+vpython.button(bind=instantiate_box, text="New")
 vpython.button(bind=set_bounding_box_n_1, text="Select Prev")
 vpython.button(bind=set_bounding_box_1, text="Select Next")
 
@@ -193,7 +274,7 @@ vpython.button(bind=move_box_n_z, text="-z")
 vpython.button(bind=rotate_box_1, text="+rot")
 vpython.button(bind=rotate_box_n_1, text="-rot")
 
-scene.append_to_caption("\n\nCamera Controls")
+scene.append_to_caption("\n\nCamera Controls\n")
 vpython.checkbox(bind=enable_calibration_overlay, text='Enable Calibration Overlay')
 
 scene.append_to_caption("\nSet camera pitch")
@@ -211,5 +292,3 @@ vpython.button(bind=set_camera_fov_10, text="+10")
 #-----------------begin scene start code---------------------------
 set_camera_pitch(initial_camera_pitch)
 set_camera_fov(initial_camera_fov)
-
-#b = BoundingBox(pos=vpython.vector(0,0,1),facing=vpython.vector(1,0,0),length=5,width=1,height=1,name="Test Name",color_value=vpython.vector(1,0,1))
