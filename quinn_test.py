@@ -24,7 +24,7 @@ bounding_box_selected_opacity = 0.5
 bounding_box_corner_size = 1
 bounding_box_corner_color = vpython.color.red
 boxes = [None] #contains None to start at index 1
-selected_bounding_box = 1
+selected_bounding_box = -1
 
 
 class MouseState(Enum):
@@ -45,15 +45,15 @@ class BoundingBox:
     def __init__(self, pos, rotation, length, width, height, index, color_value, object_type):
         self.index = index
         self.object_type = object_type
-        self.c1 = pos
-        self.c2 = vpython.vector(self.c1.x - length, self.c1.y,  self.c1.z)
-        self.c3 = vpython.vector(self.c1.x, self.c1.y,  self.c1.z + width)
-        self.c4 = vpython.vector(self.c1.x, self.c1.y + height, self.c1.z)
-        self.center = vpython.vector(self.c1.x - length/2, self.c1.y + height/2,  self.c1.z + width/2)
+        self.pos = pos
+        self.length = length
+        self.width = width
+        self.height = height
+        self.center = vpython.vector(self.pos.x - self.length / 2, self.pos.y + self.height / 2, self.pos.z + self.width / 2)
         self.rotation = 0
         self.s_key = float("0.00"+str(index))
         self.outer_box = vpython.box(pos=self.center,
-                                     length=(self.c2.x-self.c1.x), height=(self.c4.y-self.c1.y), width=(self.c3.z-self.c1.z),
+                                     length=self.length, height=self.height, width=self.width,
                                      color=color_value, opacity=bounding_box_opacity, pickable=True, shininess=self.s_key)
         self.label = vpython.label(pos=self.center, text=object_type + " " + str(index),
                                    xoffset=bounding_box_label_offset.x, yoffset=bounding_box_label_offset.y,
@@ -89,6 +89,27 @@ class BoundingBox:
         # self.corner_marker_3.pos = self.c3
         # self.corner_marker_4.pos = self.c4
 
+    def set_pos(self, pos):
+        self.pos = pos
+        self.center = vpython.vector(self.pos.x - self.length / 2, self.pos.y + self.height / 2, self.pos.z + self.width / 2)
+        self.outer_box.pos = self.center
+        self.label.pos = self.center
+
+    def set_width(self,width):
+        self.width = width
+        self.outer_box.width = self.width
+        self.set_pos(self.pos)
+
+    def set_height(self, height):
+        self.height = height
+        self.outer_box.height = self.height
+        self.set_pos(self.pos)
+
+    def set_length(self, length):
+        self.length = length
+        self.outer_box.length = self.length
+        self.set_pos(self.pos)
+
     def rotate(self, degrees):
         self.rotation += degrees
         self.outer_box.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0,1,0), origin=self.center)
@@ -109,7 +130,7 @@ class BoundingBox:
         self.rotate(degrees=(yaw - self.rotation))
 #--end of class--
 
-def instantiate_box(pos=vpython.vector(0,0,0), rotation=0, length=5, width=10, height=5, object_type="Car"):
+def instantiate_box(pos=vpython.vector(0,0,0), rotation=0, length=4, width=8, height=4, object_type="Car"):
     color_value = vpython.vector(random.random(), random.random(), random.random())
     box = BoundingBox(pos=pos, rotation=rotation, length=length, width=width, height=height, object_type=object_type, color_value=color_value, index=len(boxes))
     boxes.append(box)
@@ -211,23 +232,41 @@ def mouse_position_ground():
 
 def mouse_down():
     global mouseState
+    global selected_bounding_box
     obj = scene.mouse.pick
     if obj is None:
         instantiate_box(pos=mouse_position_ground())
     else:
-        index = int(str(obj.shininess)[4:])
-        #Finish this method with setting mousestates
-        #Shift: Height, Ctrl: Width (actually box length), Alt: Width (actually box depth)
+        selected_bounding_box = int(str(obj.shininess)[4:])
+        if scene.mouse.ctrl:
+            mouseState = MouseState.WIDTH
+        elif scene.mouse.alt:
+            mouseState = MouseState.DEPTH
+        elif scene.mouse.shift:
+            mouseState = MouseState.HEIGHT
+        else:
+            mouseState = MouseState.TRANSLATE
 
 
 def mouse_up():
     global mouseState
+    global selected_bounding_box
     mouseState = MouseState.IDLE
+    selected_bounding_box = -1
 
 def mouse_move():
     global mouseState
-    if mouseState == MouseState.IDLE:
+    global selected_bounding_box
+    if mouseState == MouseState.IDLE or selected_bounding_box == -1:
         return
+    elif mouseState == MouseState.TRANSLATE:
+        boxes[selected_bounding_box].set_pos(mouse_position_ground())
+    elif mouseState == MouseState.WIDTH:
+        boxes[selected_bounding_box].set_length(vpython.mag(boxes[selected_bounding_box].pos - mouse_position_ground()))
+    elif mouseState == MouseState.HEIGHT:
+        boxes[selected_bounding_box].set_height(vpython.mag(boxes[selected_bounding_box].pos - mouse_position_ground()))
+    elif mouseState == MouseState.DEPTH:
+        boxes[selected_bounding_box].set_width(vpython.mag(boxes[selected_bounding_box].pos - mouse_position_ground()))
 
 
 # world calibration view

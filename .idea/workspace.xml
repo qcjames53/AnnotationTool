@@ -127,7 +127,8 @@
       <workItem from="1569599791045" duration="2073000" />
       <workItem from="1569602011381" duration="7204000" />
       <workItem from="1569612573130" duration="1199000" />
-      <workItem from="1569859503474" duration="8164000" />
+      <workItem from="1569859503474" duration="8314000" />
+      <workItem from="1569875774857" duration="3887000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -150,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1569444868537</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Began work on mouse support. Not complete, but in the works. Fixed rotation.">
+      <created>1569870171057</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1569870171057</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -174,10 +182,11 @@
     <MESSAGE value="Added experimental GNU GPL Tinker 3D Library" />
     <MESSAGE value="End of day changes 2019-09-23" />
     <MESSAGE value="Added proper background image support, rotation, calibration, and a little UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added proper background image support, rotation, calibration, and a little UI" />
+    <MESSAGE value="Began work on mouse support. Not complete, but in the works. Fixed rotation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Began work on mouse support. Not complete, but in the works. Fixed rotation." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test.coverage" NAME="quinn_test Coverage Results" MODIFIED="1569868824940" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test.coverage" NAME="quinn_test Coverage Results" MODIFIED="1569879065505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$neat_demo.coverage" NAME="neat_demo Coverage Results" MODIFIED="1569258115619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tkinter3D-master" />
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
