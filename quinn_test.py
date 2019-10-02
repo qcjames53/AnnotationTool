@@ -39,9 +39,9 @@ mouseState = MouseState.IDLE
 
 
 class BoundingBox:
-    '''
-    Documentation TBD
-    '''
+    """
+    A bounding box object to be instantiated around wanted physical objects in a scene.
+    """
     def __init__(self, pos, rotation, length, width, height, index, color_value, object_type):
         self.index = index
         self.object_type = object_type
@@ -58,36 +58,16 @@ class BoundingBox:
         self.label = vpython.label(pos=self.center, text=object_type + " " + str(index),
                                    xoffset=bounding_box_label_offset.x, yoffset=bounding_box_label_offset.y,
                                    pickable=False)
-        # self.corner_marker_1 = vpython.box(pos=self.c1, length=bounding_box_corner_size, width=bounding_box_corner_size,
-        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
-        #                                    pickable=True, shininess=self.s_key)
-        # self.corner_marker_2 = vpython.box(pos=self.c2, length=bounding_box_corner_size, width=bounding_box_corner_size,
-        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
-        #                                    pickable=True, shininess=self.s_key)
-        # self.corner_marker_3 = vpython.box(pos=self.c3, length=bounding_box_corner_size, width=bounding_box_corner_size,
-        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
-        #                                    pickable=True, shininess=self.s_key)
-        # self.corner_marker_4 = vpython.box(pos=self.c4, length=bounding_box_corner_size, width=bounding_box_corner_size,
-        #                                    height=bounding_box_corner_size, color=bounding_box_corner_color,
-        #                                    pickable=True, shininess=self.s_key)
         self.rotate(rotation)
 
     def set_opacity(self, value):
         self.outer_box.opacity = value
 
     def translate(self, vector):
-        # self.c1 += vector
-        # self.c2 += vector
-        # self.c3 += vector
-        # self.c4 += vector
         self.center += vector
 
         self.outer_box.pos = self.center
         self.label.pos = self.center
-        # self.corner_marker_1.pos = self.c1
-        # self.corner_marker_2.pos = self.c2
-        # self.corner_marker_3.pos = self.c3
-        # self.corner_marker_4.pos = self.c4
 
     def set_pos(self, pos):
         self.pos = pos
@@ -114,17 +94,6 @@ class BoundingBox:
         self.rotation += degrees
         self.outer_box.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0,1,0), origin=self.center)
         self.label.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
-        # self.corner_marker_1.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
-        # self.corner_marker_2.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
-        # self.corner_marker_3.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
-        # self.corner_marker_4.rotate(angle=vpython.radians(degrees), axis=vpython.vector(0, 1, 0), origin=self.center)
-
-        # self.c1 = self.corner_marker_1.pos
-        # self.c2 = self.corner_marker_2.pos
-        # self.c3 = self.corner_marker_3.pos
-        # self.c4 = self.corner_marker_4.pos
-        # self.center = self.outer_box.pos
-
 
     def rotate_to(self, yaw):
         self.rotate(degrees=(yaw - self.rotation))
