@@ -1,8 +1,13 @@
 import random
+import numpy
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import cv2
+
+#Constants
+camera_rot = (30, 0)
 
 #Initialize Pygame Display Window
 pygame.init()
@@ -117,6 +122,10 @@ def draw_plane(lines, distance_between_lines):
     glEnd()
 
 
+def draw_background_image():
+    None
+
+
 def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2, object_type="Car"):
     color_value = (random.random(), random.random(), random.random())
     box = BoundingBox(position=position, rotation=rotation, length=length, width=width, height=height, object_type=object_type, color_value=color_value, index=len(boxes))
@@ -124,6 +133,8 @@ def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2,
 
 
 instantiate_box()
+#load_texture()
+glRotatef(camera_rot[0], 1, 0, 0)  #rotation (angle, x, y, z)
 
 while True:
     for event in pygame.event.get():
@@ -131,10 +142,10 @@ while True:
             pygame.quit()
             quit()
 
-    glRotatef(0.2, 0.1, 1, 0) #rotation (angle, x, y, z)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-    draw_plane(10, 0.5)
+    #draw_background_image()
+    draw_plane(100, 0.5)
     draw_bounding_box(1)
     draw_axis()
 
