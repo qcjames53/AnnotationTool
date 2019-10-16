@@ -10,7 +10,7 @@ import cv2
 # Constants
 camera_rot = (30, 0)
 box_translation_amount = 0.1
-box_rotation_amount = 2
+box_rotation_amount = 0.1
 box_mod_dimension_amount = 0.1
 box_mod_ctrl_multiplier = 10
 box_blink_speed = 15
@@ -30,6 +30,25 @@ edge_render_order = (
     (5,4),
     (5,7)
     )
+gVShader = """
+              attribute vec4 position;
+              attribute vec2 texture_coordinates;   
+             varying vec4 dstColor;
+             varying vec2 v_texture_coordinates;
+
+            void main() {    
+                v_texture_coordinates = texture_coordinates;
+                gl_Position = position;    
+            }"""
+
+gFShader = """   
+            uniform sampler2D texture1;
+            varying vec2 v_texture_coordinates;
+
+            void main() {
+
+                gl_FragColor = texture2D(texture1, v_texture_coordinates);
+            }"""
 
 # Global Variables for PyGame & Data Storage
 boxes = []
@@ -45,13 +64,16 @@ glTranslatef(0.0,0.0, -5)  # move camera back 5 units
 pygame.display.set_caption("Open GL Test")
 clock = pygame.time.Clock()
 
+#load the shaders
+# todo - LOAD THE SHADERS
+
 # Bounding Box Object Class
 class BoundingBox():
     """
     Documentation is TBD
     """
-    def __init__(self, index, object_type, color_value, position=(0,0,0), rotation=0, width=1.5, height=1, length=2):
-        self.index = index
+    def __init__(self, object_type, color_value, position=(0,0,0), rotation=0, width=1.5, height=1, length=2):
+        #self.index = index
         self.pos = position
         self.pos_init = position
         self.length = length
@@ -71,58 +93,58 @@ class BoundingBox():
         v0_x = self.pos[0] + self.width / 2
         v0_y = self.pos[1]
         v0_z = self.pos[2] - self.length / 2
-        v0_x = self.pos[0] + ((v0_x-self.pos[0]) * math.cos(self.rot) - (v0_z-self.pos[2]) * math.sin(self.rot))
-        v0_z = self.pos[2] + ((v0_z-self.pos[2]) * math.cos(self.rot) + (v0_x-self.pos[0]) * math.sin(self.rot))
-        v0 = (v0_x,v0_y,v0_z)
+        v0_x2 = (self.pos[0] + (((v0_x-self.pos[0]) * math.cos(self.rot)) - ((v0_z-self.pos[2]) * math.sin(self.rot))))
+        v0_z2 = (self.pos[2] + (((v0_z-self.pos[2]) * math.cos(self.rot)) + ((v0_x-self.pos[0]) * math.sin(self.rot))))
+        v0 = (v0_x2,v0_y,v0_z2)
 
         v1_x = self.pos[0] + self.width / 2
         v1_y = self.pos[1] + self.height
         v1_z = self.pos[2] - self.length / 2
-        v1_x = self.pos[0] + ((v1_x-self.pos[0]) * math.cos(self.rot) - (v1_z-self.pos[2]) * math.sin(self.rot))
-        v1_z = self.pos[2] + ((v1_z-self.pos[2]) * math.cos(self.rot) + (v1_x-self.pos[0]) * math.sin(self.rot))
-        v1 = (v1_x, v1_y, v1_z)
+        v1_x2 = self.pos[0] + ((v1_x-self.pos[0]) * math.cos(self.rot) - (v1_z-self.pos[2]) * math.sin(self.rot))
+        v1_z2 = self.pos[2] + ((v1_z-self.pos[2]) * math.cos(self.rot) + (v1_x-self.pos[0]) * math.sin(self.rot))
+        v1 = (v1_x2, v1_y, v1_z2)
 
         v2_x = self.pos[0] - self.width / 2
         v2_y = self.pos[1] + self.height
         v2_z = self.pos[2] - self.length / 2
-        v2_x = self.pos[0] + ((v2_x-self.pos[0]) * math.cos(self.rot) - (v2_z-self.pos[2]) * math.sin(self.rot))
-        v2_z = self.pos[2] + ((v2_z-self.pos[2]) * math.cos(self.rot) + (v2_x-self.pos[0]) * math.sin(self.rot))
-        v2 = (v2_x, v2_y, v2_z)
+        v2_x2 = self.pos[0] + ((v2_x-self.pos[0]) * math.cos(self.rot) - (v2_z-self.pos[2]) * math.sin(self.rot))
+        v2_z2 = self.pos[2] + ((v2_z-self.pos[2]) * math.cos(self.rot) + (v2_x-self.pos[0]) * math.sin(self.rot))
+        v2 = (v2_x2, v2_y, v2_z2)
 
         v3_x = self.pos[0] - self.width / 2
         v3_y = self.pos[1]
         v3_z = self.pos[2] - self.length / 2
-        v3_x = self.pos[0] + ((v3_x-self.pos[0]) * math.cos(self.rot) - (v3_z-self.pos[2]) * math.sin(self.rot))
-        v3_z = self.pos[2] + ((v3_z-self.pos[2]) * math.cos(self.rot) + (v3_x-self.pos[0]) * math.sin(self.rot))
-        v3 = (v3_x, v3_y, v3_z)
+        v3_x2 = self.pos[0] + ((v3_x-self.pos[0]) * math.cos(self.rot) - (v3_z-self.pos[2]) * math.sin(self.rot))
+        v3_z2 = self.pos[2] + ((v3_z-self.pos[2]) * math.cos(self.rot) + (v3_x-self.pos[0]) * math.sin(self.rot))
+        v3 = (v3_x2, v3_y, v3_z2)
 
         v4_x = self.pos[0] + self.width / 2
         v4_y = self.pos[1]
         v4_z = self.pos[2] + self.length / 2
-        v4_x = self.pos[0] + ((v4_x-self.pos[0]) * math.cos(self.rot) - (v4_z-self.pos[2]) * math.sin(self.rot))
-        v4_z = self.pos[2] + ((v4_z-self.pos[2]) * math.cos(self.rot) + (v4_x-self.pos[0]) * math.sin(self.rot))
-        v4 = (v4_x, v4_y, v4_z)
+        v4_x2 = self.pos[0] + ((v4_x-self.pos[0]) * math.cos(self.rot) - (v4_z-self.pos[2]) * math.sin(self.rot))
+        v4_z2 = self.pos[2] + ((v4_z-self.pos[2]) * math.cos(self.rot) + (v4_x-self.pos[0]) * math.sin(self.rot))
+        v4 = (v4_x2, v4_y, v4_z2)
 
         v5_x = self.pos[0] + self.width / 2
         v5_y = self.pos[1] + self.height
         v5_z = self.pos[2] + self.length / 2
-        v5_x = self.pos[0] + ((v5_x-self.pos[0]) * math.cos(self.rot) - (v5_z-self.pos[2]) * math.sin(self.rot))
-        v5_z = self.pos[2] + ((v5_z-self.pos[2]) * math.cos(self.rot) + (v5_x-self.pos[0]) * math.sin(self.rot))
-        v5 = (v5_x, v5_y, v5_z)
+        v5_x2 = self.pos[0] + ((v5_x-self.pos[0]) * math.cos(self.rot) - (v5_z-self.pos[2]) * math.sin(self.rot))
+        v5_z2 = self.pos[2] + ((v5_z-self.pos[2]) * math.cos(self.rot) + (v5_x-self.pos[0]) * math.sin(self.rot))
+        v5 = (v5_x2, v5_y, v5_z2)
 
         v6_x = self.pos[0] - self.width / 2
         v6_y = self.pos[1]
         v6_z = self.pos[2] + self.length / 2
-        v6_x = self.pos[0] + ((v6_x-self.pos[0]) * math.cos(self.rot) - (v6_z-self.pos[2]) * math.sin(self.rot))
-        v6_z = self.pos[2] + ((v6_z-self.pos[2]) * math.cos(self.rot) + (v6_x-self.pos[0]) * math.sin(self.rot))
-        v6 = (v6_x, v6_y, v6_z)
+        v6_x2 = self.pos[0] + ((v6_x-self.pos[0]) * math.cos(self.rot) - (v6_z-self.pos[2]) * math.sin(self.rot))
+        v6_z2 = self.pos[2] + ((v6_z-self.pos[2]) * math.cos(self.rot) + (v6_x-self.pos[0]) * math.sin(self.rot))
+        v6 = (v6_x2, v6_y, v6_z2)
 
         v7_x = self.pos[0] - self.width / 2
         v7_y = self.pos[1] + self.height
         v7_z = self.pos[2] + self.length / 2
-        v7_x = self.pos[0] + ((v7_x-self.pos[0]) * math.cos(self.rot) - (v7_z-self.pos[2]) * math.sin(self.rot))
-        v7_z = self.pos[2] + ((v7_z-self.pos[2]) * math.cos(self.rot) + (v7_x-self.pos[0]) * math.sin(self.rot))
-        v7 = (v7_x, v7_y, v7_z)
+        v7_x2 = self.pos[0] + ((v7_x-self.pos[0]) * math.cos(self.rot) - (v7_z-self.pos[2]) * math.sin(self.rot))
+        v7_z2 = self.pos[2] + ((v7_z-self.pos[2]) * math.cos(self.rot) + (v7_x-self.pos[0]) * math.sin(self.rot))
+        v7 = (v7_x2, v7_y, v7_z2)
 
         self.vertices = (v0, v1, v2, v3, v4, v5, v6, v7)
 
@@ -231,9 +253,9 @@ def draw_background_image():
 def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2, object_type="Car"):
     color_value = (random.random(), random.random(), random.random())
     new_box = BoundingBox(position=position, rotation=rotation, length=length, width=width, height=height,
-                      object_type=object_type, color_value=color_value, index=len(boxes))
+                      object_type=object_type, color_value=color_value)
     global selected_box
-    selected_box = new_box.index
+    selected_box = len(boxes)
     boxes.append(new_box)
 
 
@@ -249,13 +271,21 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:  # Create New Box
                 instantiate_box()
+                box_blink_frame = 0
+                box_blink_state = True
             if (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:  # Delete Selected Box
-                del boxes[selected_box]
+                boxes.pop(selected_box)
                 selected_box = min(selected_box,len(boxes)-1)  # clamp selected_box to usable range
-            if event.key == pygame.K_PAGEDOWN and selected_box > 0 :  # Select Previous Box
+                box_blink_frame = 0
+                box_blink_state = True
+            if (event.key == pygame.K_PAGEDOWN or event.key == pygame.K_z) and selected_box > 0 :  # Select Previous Box
                 selected_box -= 1
-            if event.key == pygame.K_PAGEUP and selected_box < len(boxes)-1:  # Select Next Box
+                box_blink_frame = 0
+                box_blink_state = True
+            if (event.key == pygame.K_PAGEUP or event.key == pygame.K_x) and selected_box < len(boxes)-1:  # Select Next Box
                 selected_box += 1
+                box_blink_frame = 0
+                box_blink_state = True
             if pygame.key.get_mods() & pygame.KMOD_ALT:  # Toggle Ground Plane Grid Visibility
                 show_ground_plane_grid = not show_ground_plane_grid
             if event.key == pygame.K_SPACE:  # Reset Selected Box
@@ -284,6 +314,8 @@ while True:
                 boxes[selected_box].mod_rot(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
             if event.key == pygame.K_f:
                 boxes[selected_box].mod_rot(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+            if event.key == pygame.K_p:
+                print(str(boxes[selected_box].vertices[0][0])+","+str(boxes[selected_box].vertices[0][2]))
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -292,11 +324,11 @@ while True:
         draw_ground_plane_grid(100, 0.5)
         draw_axis()
 
-    for box in boxes:
-        if selected_box == box.index and box_blink_state:
-            draw_bounding_box(box.index, True)
+    for index in range(0,len(boxes)):
+        if selected_box == index and box_blink_state:
+            draw_bounding_box(index, True)
         else:
-            draw_bounding_box(box.index)
+            draw_bounding_box(index)
 
     pygame.display.flip()
     box_blink_frame += 1
