@@ -1,3 +1,6 @@
+# This document contains sample code from https://rdmilligan.wordpress.com/2016/08/27/opengl-shaders-using-python/
+# It was used to handle most of the image display functionality
+
 import random
 import numpy
 import math
@@ -5,18 +8,18 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import cv2
+from OpenGL.GL.shaders import *
+from PIL import Image
 
 # Constants
 camera_rot = (30, 0)
+background_image = "test_image.png"
 box_translation_amount = 0.1
-box_rotation_amount = 0.1
+box_rotation_amount = math.radians(1)
 box_mod_dimension_amount = 0.1
 box_mod_ctrl_multiplier = 10
 box_blink_speed = 15
-box_blink_frame = 0
-box_blink_state = False
-edge_render_order = (
+box_edge_render_order = (
     (0,1),
     (0,3),
     (0,4),
@@ -28,44 +31,102 @@ edge_render_order = (
     (6,7),
     (5,1),
     (5,4),
-    (5,7)
+    (5,7),
+    (8,9)  # forward-facing line
     )
-gVShader = """
-              attribute vec4 position;
-              attribute vec2 texture_coordinates;   
-             varying vec4 dstColor;
-             varying vec2 v_texture_coordinates;
-
-            void main() {    
-                v_texture_coordinates = texture_coordinates;
-                gl_Position = position;    
-            }"""
-
-gFShader = """   
-            uniform sampler2D texture1;
-            varying vec2 v_texture_coordinates;
-
-            void main() {
-
-                gl_FragColor = texture2D(texture1, v_texture_coordinates);
-            }"""
 
 # Global Variables for PyGame & Data Storage
 boxes = []
 selected_box = 0
 show_ground_plane_grid = False
+box_blink_frame = 0
+box_blink_state = False
 
-# Initialize Pygame Display Window & OpenGL
+# Initialize PyGame Display Window & OpenGL
 pygame.init()
 render_size = (720, 480)
 render = pygame.display.set_mode(render_size, DOUBLEBUF | OPENGL)  # Double buffer for monitor refresh rate & OpenGL support in Pygame
 gluPerspective(45, (render_size[0] / render_size[1]), 0.1, 50.0)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
 glTranslatef(0.0,0.0, -5)  # move camera back 5 units
+glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
 pygame.display.set_caption("Open GL Test")
 clock = pygame.time.Clock()
 
-#load the shaders
-# todo - LOAD THE SHADERS
+# OpenGL Image display shader setup
+vertexShader = """
+    #version 330 core
+
+    attribute vec3 vert;
+    attribute vec2 uV;
+    uniform mat4 mvMatrix;
+    uniform mat4 pMatrix;
+    out vec2 UV;
+
+    void main() {
+      gl_Position = pMatrix * mvMatrix * vec4(vert, 1.0);
+      UV = uV;
+    }
+"""
+fragmentShader = """
+    #version 330 core
+
+    in vec2 UV;
+    uniform sampler2D backgroundTexture;
+    out vec3 colour;
+
+    void main() {
+      colour = texture(backgroundTexture, UV).rgb;
+    }
+"""
+vs = compileShader(vertexShader, GL_VERTEX_SHADER)
+fs = compileShader(fragmentShader, GL_FRAGMENT_SHADER)
+shader_program = compileProgram(vs, fs)
+
+# obtain uniforms and attributes
+aVert = glGetAttribLocation(shader_program, "vert")
+aUV = glGetAttribLocation(shader_program, "uV")
+uPMatrix = glGetUniformLocation(shader_program, 'pMatrix')
+uMVMatrix = glGetUniformLocation(shader_program, "mvMatrix")
+uBackgroundTexture = glGetUniformLocation(shader_program, "backgroundTexture")
+
+# set background vertices
+backgroundVertices = [
+    -2.0, 1.5, 0.0,
+    -2.0, -1.5, 0.0,
+    2.0, 1.5, 0.0,
+    2.0, 1.5, 0.0,
+    -2.0, -1.5, 0.0,
+    2.0, -1.5, 0.0]
+
+vertexBuffer = glGenBuffers(1)
+glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)
+vertexData = numpy.array(backgroundVertices, numpy.float32)
+glBufferData(GL_ARRAY_BUFFER, 4 * len(vertexData), vertexData, GL_STATIC_DRAW)
+
+# set background UV
+backgroundUV = [
+    0.0, 0.0,
+    0.0, 1.0,
+    1.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 1.0]
+
+uvBuffer = glGenBuffers(1)
+glBindBuffer(GL_ARRAY_BUFFER, uvBuffer)
+uvData = numpy.array(backgroundUV, numpy.float32)
+glBufferData(GL_ARRAY_BUFFER, 4 * len(uvData), uvData, GL_STATIC_DRAW)
+
+# set background texture
+backgroundImage = Image.open(background_image)
+backgroundImageData = numpy.array(list(backgroundImage.getdata()), numpy.uint8)
+backgroundTexture = glGenTextures(1)
+glBindTexture(GL_TEXTURE_2D, backgroundTexture)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, backgroundImage.size[0], backgroundImage.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE,
+             backgroundImageData)
+
 
 # Bounding Box Object Class
 class BoundingBox():
@@ -73,7 +134,6 @@ class BoundingBox():
     Documentation is TBD
     """
     def __init__(self, object_type, color_value, position=(0,0,0), rotation=0, width=1.5, height=1, length=2):
-        #self.index = index
         self.pos = position
         self.pos_init = position
         self.length = length
@@ -146,18 +206,21 @@ class BoundingBox():
         v7_z2 = self.pos[2] + ((v7_z-self.pos[2]) * math.cos(self.rot) + (v7_x-self.pos[0]) * math.sin(self.rot))
         v7 = (v7_x2, v7_y, v7_z2)
 
-        self.vertices = (v0, v1, v2, v3, v4, v5, v6, v7)
+        v8_x = self.pos[0]
+        v8_y = self.pos[1] + self.height / 2
+        v8_z = self.pos[2] + self.length / 2
+        v8_x2 = self.pos[0] + ((v8_x - self.pos[0]) * math.cos(self.rot) - (v8_z - self.pos[2]) * math.sin(self.rot))
+        v8_z2 = self.pos[2] + ((v8_z - self.pos[2]) * math.cos(self.rot) + (v8_x - self.pos[0]) * math.sin(self.rot))
+        v8 = (v8_x2, v8_y, v8_z2)
 
-        # self.vertices = (
-        #     (self.pos[0] + self.width / 2, self.pos[1], self.pos[2] - self.length / 2),
-        #     (self.pos[0] + self.width / 2, self.pos[1] + self.height, self.pos[2] - self.length / 2),
-        #     (self.pos[0] - self.width / 2, self.pos[1] + self.height, self.pos[2] - self.length / 2),
-        #     (self.pos[0] - self.width / 2, self.pos[1], self.pos[2] - self.length / 2),
-        #     (self.pos[0] + self.width / 2, self.pos[1], self.pos[2] + self.length / 2),
-        #     (self.pos[0] + self.width / 2, self.pos[1] + self.height, self.pos[2] + self.length / 2),
-        #     (self.pos[0] - self.width / 2, self.pos[1], self.pos[2] + self.length / 2),
-        #     (self.pos[0] - self.width / 2, self.pos[1] + self.height, self.pos[2] + self.length / 2)
-        # )
+        v9_x = self.pos[0]
+        v9_y = self.pos[1] + self.height / 2
+        v9_z = self.pos[2] + self.length / 2 + 1
+        v9_x2 = self.pos[0] + ((v9_x - self.pos[0]) * math.cos(self.rot) - (v9_z - self.pos[2]) * math.sin(self.rot))
+        v9_z2 = self.pos[2] + ((v9_z - self.pos[2]) * math.cos(self.rot) + (v9_x - self.pos[0]) * math.sin(self.rot))
+        v9 = (v9_x2, v9_y, v9_z2)
+
+        self.vertices = (v0, v1, v2, v3, v4, v5, v6, v7, v8, v9)
 
     def reset(self):
         self.pos = self.pos_init
@@ -212,7 +275,7 @@ def draw_bounding_box(index, selected=False):
         glColor3fv((1, 1, 1))
     else:
         glColor3fv(boxes[index].color_value)
-    for edge in edge_render_order:
+    for edge in box_edge_render_order:
         for vertex in edge:
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
@@ -247,7 +310,55 @@ def draw_ground_plane_grid(lines, distance_between_lines):
 
 
 def draw_background_image():
-    None
+    # create projection matrix
+    fov = math.radians(45.0)
+    f = 1.0 / math.tan(fov / 2.0)
+    zNear = 0.1
+    zFar = 100.0
+    aspect = render_size[0] / render_size[1]
+    pMatrix = numpy.array([
+        f / aspect, 0.0, 0.0, 0.0,
+        0.0, f, 0.0, 0.0,
+        0.0, 0.0, (zFar + zNear) / (zNear - zFar), -1.0,
+        0.0, 0.0, 2.0 * zFar * zNear / (zNear - zFar), 0.0], numpy.float32)
+
+    # create modelview matrix
+    mvMatrix = numpy.array([
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, -3.6, 1.0], numpy.float32)
+
+    # use shader program
+    glUseProgram(shader_program)
+
+    # set uniforms
+    glUniformMatrix4fv(uPMatrix, 1, GL_FALSE, pMatrix)
+    glUniformMatrix4fv(uMVMatrix, 1, GL_FALSE, mvMatrix)
+    glUniform1i(uBackgroundTexture, 0)
+
+    # enable attribute arrays
+    glEnableVertexAttribArray(aVert)
+    glEnableVertexAttribArray(aUV)
+
+    # set vertex and UV buffers
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer)
+    glVertexAttribPointer(aVert, 3, GL_FLOAT, GL_FALSE, 0, None)
+    glBindBuffer(GL_ARRAY_BUFFER, uvBuffer)
+    glVertexAttribPointer(aUV, 2, GL_FLOAT, GL_FALSE, 0, None)
+
+    # bind background texture
+    glActiveTexture(GL_TEXTURE0)
+    glBindTexture(GL_TEXTURE_2D, backgroundTexture)
+
+    # draw
+    glDrawArrays(GL_TRIANGLES, 0, 6)
+
+    # disable attribute arrays
+    glDisableVertexAttribArray(aVert)
+    glDisableVertexAttribArray(aUV)
+
+    glUseProgram(0)
 
 
 def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2, object_type="Car"):
@@ -259,9 +370,7 @@ def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2,
     boxes.append(new_box)
 
 
-# load_texture()
-glRotatef(camera_rot[0], 1, 0, 0)  # rotation (angle, x, y, z)
-
+# Main program runtime loop
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -269,70 +378,82 @@ while True:
             quit()
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:  # Create New Box
+            # Box creation and deletion
+            if event.key == pygame.K_RETURN:
                 instantiate_box()
                 box_blink_frame = 0
                 box_blink_state = True
-            if (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:  # Delete Selected Box
+            elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:
                 boxes.pop(selected_box)
                 selected_box = min(selected_box,len(boxes)-1)  # clamp selected_box to usable range
                 box_blink_frame = 0
                 box_blink_state = True
-            if (event.key == pygame.K_PAGEDOWN or event.key == pygame.K_z) and selected_box > 0 :  # Select Previous Box
+
+            # Box selection
+            elif (event.key == pygame.K_PAGEDOWN or event.key == pygame.K_z) and selected_box > 0 :  # Select Previous Box
                 selected_box -= 1
                 box_blink_frame = 0
                 box_blink_state = True
-            if (event.key == pygame.K_PAGEUP or event.key == pygame.K_x) and selected_box < len(boxes)-1:  # Select Next Box
+            elif (event.key == pygame.K_PAGEUP or event.key == pygame.K_x) and selected_box < len(boxes)-1:  # Select Next Box
                 selected_box += 1
                 box_blink_frame = 0
                 box_blink_state = True
-            if pygame.key.get_mods() & pygame.KMOD_ALT:  # Toggle Ground Plane Grid Visibility
+
+            # Toggle debug plane visibility
+            elif pygame.key.get_mods() & pygame.KMOD_ALT:
                 show_ground_plane_grid = not show_ground_plane_grid
-            if event.key == pygame.K_SPACE:  # Reset Selected Box
+
+            # Reset selected box to default values
+            elif event.key == pygame.K_SPACE:
                 boxes[selected_box].reset()
-            if event.key == pygame.K_UP:  # Translate Selected Box
+
+            # Adjust selected box translation
+            elif event.key == pygame.K_UP:
                 boxes[selected_box].mod_pos((0, 0, -box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 boxes[selected_box].mod_pos((0, 0, box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
-            if event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT:
                 boxes[selected_box].mod_pos((-box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
-            if event.key == pygame.K_RIGHT:
+            elif event.key == pygame.K_RIGHT:
                 boxes[selected_box].mod_pos((box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
-            if event.key == pygame.K_w:  # Adjust Height of Selected Box
+
+            # Adjust selected box dimensions
+            elif event.key == pygame.K_w:
                 boxes[selected_box].mod_height(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_s and boxes[selected_box].height - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:
+            elif event.key == pygame.K_s and boxes[selected_box].height - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:
                 boxes[selected_box].mod_height(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_a and boxes[selected_box].width - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Width of Selected Box
+            elif event.key == pygame.K_a and boxes[selected_box].width - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Width of Selected Box
                 boxes[selected_box].mod_width(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_d:
+            elif event.key == pygame.K_d:
                 boxes[selected_box].mod_width(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_q and boxes[selected_box].length - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Length / Depth of Selected Box
+            elif event.key == pygame.K_q and boxes[selected_box].length - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Length / Depth of Selected Box
                 boxes[selected_box].mod_length(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_e:
+            elif event.key == pygame.K_e:
                 boxes[selected_box].mod_length(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_r:  # Adjust Rotation of Selected Box
-                boxes[selected_box].mod_rot(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_f:
-                boxes[selected_box].mod_rot(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            if event.key == pygame.K_p:
-                print(str(boxes[selected_box].vertices[0][0])+","+str(boxes[selected_box].vertices[0][2]))
 
+            # Adjust selected box rotation
+            elif event.key == pygame.K_r:
+                boxes[selected_box].mod_rot(box_rotation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+            elif event.key == pygame.K_f:
+                boxes[selected_box].mod_rot(-box_rotation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+
+    box_blink_frame += 1
+    if box_blink_frame >= box_blink_speed:
+        box_blink_state = not box_blink_state
+        box_blink_frame = 0
+
+    # Drawing code
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-#   draw_background_image()
+    draw_background_image()
     if show_ground_plane_grid:
         draw_ground_plane_grid(100, 0.5)
         draw_axis()
-
-    for index in range(0,len(boxes)):
+    for index in range(0, len(boxes)):
         if selected_box == index and box_blink_state:
             draw_bounding_box(index, True)
         else:
             draw_bounding_box(index)
 
+    # Update display and clock
     pygame.display.flip()
-    box_blink_frame += 1
-    if box_blink_frame >= box_blink_speed:
-        box_blink_state = not box_blink_state
-        box_blink_frame = 0
     clock.tick(30)  # 30 fps clock
