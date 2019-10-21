@@ -9,9 +9,11 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GL.shaders import *
+from OpenGL.GLUT import *
 from PIL import Image
 
 # Constants
+show_full_data = False
 camera_rot = (30, 0)
 background_image = "test_image.png"
 box_translation_amount = 0.1
@@ -19,6 +21,7 @@ box_rotation_amount = math.radians(1)
 box_mod_dimension_amount = 0.1
 box_mod_ctrl_multiplier = 10
 box_blink_speed = 15
+box_label_font = OpenGL.GLUT.GLUT_BITMAP_8_BY_13
 box_edge_render_order = (
     (0,1),
     (0,3),
@@ -44,13 +47,16 @@ box_blink_state = False
 
 # Initialize PyGame Display Window & OpenGL
 pygame.init()
+glutInit()
 render_size = (720, 480)
 render = pygame.display.set_mode(render_size, DOUBLEBUF | OPENGL)  # Double buffer for monitor refresh rate & OpenGL support in Pygame
 gluPerspective(45, (render_size[0] / render_size[1]), 0.1, 50.0)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
-glTranslatef(0.0,0.0, -5)  # move camera back 5 units
-glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
 pygame.display.set_caption("Open GL Test")
 clock = pygame.time.Clock()
+
+# Camera Setup
+glTranslatef(0.0,0.0, -5)  # move camera back 5 units
+glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
 
 # OpenGL Image display shader setup
 vertexShader = """
@@ -268,6 +274,12 @@ class BoundingBox():
     def mod_rot(self,rotation):
         self.set_rot(self.rot + rotation)
 
+    def round_2(self,x):
+        return "%.2f" % round(x,2)
+
+    def print(self):
+        return "[(" + self.round_2(self.pos[0]) + "," + self.round_2(self.pos[1]) + "," + self.round_2(self.pos[2]) + "),(" + self.round_2(self.width) + "," + self.round_2(self.height) + "," + self.round_2(self.length) + "," + self.round_2(self.rot) + ")]"
+
 
 def draw_bounding_box(index, selected=False):
     glBegin(GL_LINES)
@@ -279,6 +291,10 @@ def draw_bounding_box(index, selected=False):
         for vertex in edge:
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
+    if show_full_data:
+        draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index) + ": " + boxes[index].print())
+    else:
+        draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index))
 
 
 def draw_axis():
@@ -359,6 +375,37 @@ def draw_background_image():
     glDisableVertexAttribArray(aUV)
 
     glUseProgram(0)
+
+
+def draw_text(pos, font, text):
+
+    blending = False
+    if glIsEnabled(GL_BLEND) :
+        blending = True
+
+    # glEnable(GL_BLEND)
+    glColor3f(1,1,1)
+    glWindowPos2f(pos[0],pos[1])
+    for ch in text:
+        glutBitmapCharacter(font, ctypes.c_int(ord(ch)))
+
+    if not blending :
+        glDisable(GL_BLEND)
+
+def draw_text_3d(pos, font, text):
+
+            blending = False
+            if glIsEnabled(GL_BLEND):
+                blending = True
+
+            # glEnable(GL_BLEND)
+            glColor3f(1, 1, 1)
+            glRasterPos3f(pos[0],pos[1],pos[2])
+            for ch in text:
+                glutBitmapCharacter(font, ctypes.c_int(ord(ch)))
+
+            if not blending:
+                glDisable(GL_BLEND)
 
 
 def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2, object_type="Car"):
