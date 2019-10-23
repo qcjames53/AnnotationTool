@@ -13,7 +13,7 @@ from OpenGL.GLUT import *
 from PIL import Image
 
 # Constants
-show_full_data = False
+show_full_data = True
 camera_rot = (30, 0)
 background_image = "test_image.png"
 box_translation_amount = 0.1
@@ -291,7 +291,7 @@ def draw_bounding_box(index, selected=False):
         for vertex in edge:
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
-    if show_full_data:
+    if show_full_data and show_ground_plane_grid:
         draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index) + ": " + boxes[index].print())
     else:
         draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index))
@@ -397,6 +397,11 @@ def draw_text_3d(pos, font, text):
             blending = False
             if glIsEnabled(GL_BLEND):
                 blending = True
+
+            glColor3f(0, 0, 0)
+            glRasterPos3f(pos[0], pos[1], pos[2])
+            for ch in text:
+                glutBitmapCharacter(font, ctypes.c_int(ord(ch))
 
             # glEnable(GL_BLEND)
             glColor3f(1, 1, 1)

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/opengl_pygame_text_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opengl_pygame.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl_pygame.py" afterDir="false" />
     </list>
@@ -162,7 +161,10 @@
       <workItem from="1570810058193" duration="10359000" />
       <workItem from="1571244665366" duration="6581000" />
       <workItem from="1571414965601" duration="8953000" />
-      <workItem from="1571676490073" duration="4720000" />
+      <workItem from="1571676490073" duration="4867000" />
+      <workItem from="1571765377659" duration="603000" />
+      <workItem from="1571848959561" duration="1798000" />
+      <workItem from="1571860900299" duration="807000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -241,7 +243,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571423331652</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added text display using GLUT for Bounding Box labels.&#10;&#10;There were some issues with the Python default GLUT install, so you may have to install some .wpl files from this website (at least that fixed it for me). https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html">
+      <created>1571681592959</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1571681592959</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -273,14 +282,15 @@
     <MESSAGE value="Improved controls with macro and fine adjustment. Began work on rotation (still suspect, I likely messed up the trig). Added ability to delete bounding boxes (which throws an out of bounds exception in common cases, needs work)." />
     <MESSAGE value="Fixed rotation. Improved visualization and blink timing when swithcing boxes. Fixed obscure oob errors. Began work on image shaders." />
     <MESSAGE value="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process." />
+    <MESSAGE value="Added text display using GLUT for Bounding Box labels.&#10;&#10;There were some issues with the Python default GLUT install, so you may have to install some .wpl files from this website (at least that fixed it for me). https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added text display using GLUT for Bounding Box labels.&#10;&#10;There were some issues with the Python default GLUT install, so you may have to install some .wpl files from this website (at least that fixed it for me). https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571679867189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_image_test.coverage" NAME="opengl_pygame_image_test Coverage Results" MODIFIED="1571419937262" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_image_display_test.coverage" NAME="opengl_image_display_test Coverage Results" MODIFIED="1571419513188" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test.coverage" NAME="quinn_test Coverage Results" MODIFIED="1570038417258" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame.coverage" NAME="opengl_pygame Coverage Results" MODIFIED="1571681438526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame.coverage" NAME="opengl_pygame Coverage Results" MODIFIED="1571861658580" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$neat_demo.coverage" NAME="neat_demo Coverage Results" MODIFIED="1569258115619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tkinter3D-master" />
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
