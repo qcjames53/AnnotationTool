@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opengl_pygame.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl_pygame.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -164,7 +163,7 @@
       <workItem from="1571676490073" duration="4867000" />
       <workItem from="1571765377659" duration="603000" />
       <workItem from="1571848959561" duration="1798000" />
-      <workItem from="1571860900299" duration="807000" />
+      <workItem from="1571860900299" duration="846000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -250,7 +249,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571681592959</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="GLUT changes and ALT changes.">
+      <created>1571861739442</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1571861739442</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -283,7 +289,8 @@
     <MESSAGE value="Fixed rotation. Improved visualization and blink timing when swithcing boxes. Fixed obscure oob errors. Began work on image shaders." />
     <MESSAGE value="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process." />
     <MESSAGE value="Added text display using GLUT for Bounding Box labels.&#10;&#10;There were some issues with the Python default GLUT install, so you may have to install some .wpl files from this website (at least that fixed it for me). https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added text display using GLUT for Bounding Box labels.&#10;&#10;There were some issues with the Python default GLUT install, so you may have to install some .wpl files from this website (at least that fixed it for me). https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html" />
+    <MESSAGE value="GLUT changes and ALT changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="GLUT changes and ALT changes." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

@@ -398,11 +398,6 @@ def draw_text_3d(pos, font, text):
             if glIsEnabled(GL_BLEND):
                 blending = True
 
-            glColor3f(0, 0, 0)
-            glRasterPos3f(pos[0], pos[1], pos[2])
-            for ch in text:
-                glutBitmapCharacter(font, ctypes.c_int(ord(ch))
-
             # glEnable(GL_BLEND)
             glColor3f(1, 1, 1)
             glRasterPos3f(pos[0],pos[1],pos[2])
