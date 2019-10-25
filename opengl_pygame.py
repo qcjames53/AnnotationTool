@@ -1,6 +1,8 @@
 # This document contains sample code from https://rdmilligan.wordpress.com/2016/08/27/opengl-shaders-using-python/
 # It was used to handle most of the image display functionality
 
+# Classes: car, pedestrian, cyclist
+
 import random
 import numpy
 import math
@@ -13,7 +15,7 @@ from OpenGL.GLUT import *
 from PIL import Image
 
 # Constants
-show_full_data = False
+show_full_data = True
 camera_rot = (30, 0)
 background_image = "test_image.png"
 box_translation_amount = 0.1
@@ -291,7 +293,7 @@ def draw_bounding_box(index, selected=False):
         for vertex in edge:
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
-    if show_full_data:
+    if show_full_data and show_ground_plane_grid:
         draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index) + ": " + boxes[index].print())
     else:
         draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index))
