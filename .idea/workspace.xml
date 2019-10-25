@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/opengl_pygame_text_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opengl_pygame.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl_pygame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quinn_test_opengl.py" beforeDir="false" afterPath="$PROJECT_DIR$/quinn_test_opengl.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,15 +30,14 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/opengl_pygame.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.documentation.PythonDocumentationConfigurable" />
-    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/opengl_pygame.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -53,8 +51,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.opengl_pygame">
-    <configuration name="opengl_pygame" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.quinn_test_opengl">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="AnnotationTool" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -67,7 +65,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_pygame.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -76,7 +74,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="opengl_pygame_image_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="quinn_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="AnnotationTool" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -89,7 +87,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_pygame_image_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/quinn_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -98,7 +96,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="opengl_pygame_text_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="quinn_test_opengl" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="AnnotationTool" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -111,7 +109,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_pygame_text_test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/quinn_test_opengl.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -121,15 +119,15 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.opengl_pygame" />
-      <item itemvalue="Python.opengl_pygame_image_test" />
-      <item itemvalue="Python.opengl_pygame_text_test" />
+      <item itemvalue="Python.app" />
+      <item itemvalue="Python.quinn_test" />
+      <item itemvalue="Python.quinn_test_opengl" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.opengl_pygame" />
-        <item itemvalue="Python.opengl_pygame_text_test" />
-        <item itemvalue="Python.opengl_pygame_image_test" />
+        <item itemvalue="Python.quinn_test_opengl" />
+        <item itemvalue="Python.quinn_test" />
+        <item itemvalue="Python.app" />
       </list>
     </recent_temporary>
   </component>
@@ -159,10 +157,7 @@
       <workItem from="1570038400600" duration="5028000" />
       <workItem from="1570205350095" duration="4613000" />
       <workItem from="1570466141882" duration="4531000" />
-      <workItem from="1570810058193" duration="10359000" />
-      <workItem from="1571244665366" duration="6581000" />
-      <workItem from="1571414965601" duration="8953000" />
-      <workItem from="1571676490073" duration="4720000" />
+      <workItem from="1570810058193" duration="10248000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -220,28 +215,7 @@
       <option name="project" value="LOCAL" />
       <updated>1570814189286</updated>
     </task>
-    <task id="LOCAL-00009" summary="Improved controls with macro and fine adjustment. Began work on rotation (still suspect, I likely messed up the trig). Added ability to delete bounding boxes (which throws an out of bounds exception in common cases, needs work).">
-      <created>1570820534681</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1570820534681</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Fixed rotation. Improved visualization and blink timing when swithcing boxes. Fixed obscure oob errors. Began work on image shaders.">
-      <created>1571251732876</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1571251732876</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process.">
-      <created>1571423331652</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1571423331652</updated>
-    </task>
-    <option name="localTasksCounter" value="12" />
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -270,19 +244,12 @@
     <MESSAGE value="Shifted focus to OpenGL development and away from Vpython due to limitations. Hope this is a good idea!" />
     <MESSAGE value="Everything is a complete mess why did I do this to myself" />
     <MESSAGE value="Added translation and modification of bounding boxes with keyboard controls. (see pygame inputs at bottom for instruction)" />
-    <MESSAGE value="Improved controls with macro and fine adjustment. Began work on rotation (still suspect, I likely messed up the trig). Added ability to delete bounding boxes (which throws an out of bounds exception in common cases, needs work)." />
-    <MESSAGE value="Fixed rotation. Improved visualization and blink timing when swithcing boxes. Fixed obscure oob errors. Began work on image shaders." />
-    <MESSAGE value="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added translation and modification of bounding boxes with keyboard controls. (see pygame inputs at bottom for instruction)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571679867189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_image_test.coverage" NAME="opengl_pygame_image_test Coverage Results" MODIFIED="1571419937262" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_image_display_test.coverage" NAME="opengl_image_display_test Coverage Results" MODIFIED="1571419513188" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test.coverage" NAME="quinn_test Coverage Results" MODIFIED="1570038417258" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame.coverage" NAME="opengl_pygame Coverage Results" MODIFIED="1571681438526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$neat_demo.coverage" NAME="neat_demo Coverage Results" MODIFIED="1569258115619" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Tkinter3D-master" />
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1570820396210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
