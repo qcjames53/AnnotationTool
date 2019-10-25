@@ -1,6 +1,8 @@
 # This document contains sample code from https://rdmilligan.wordpress.com/2016/08/27/opengl-shaders-using-python/
 # It was used to handle most of the image display functionality
 
+# Classes: car, pedestrian, cyclist
+
 import random
 import numpy
 import math
