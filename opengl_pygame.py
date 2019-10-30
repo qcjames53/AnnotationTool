@@ -17,10 +17,10 @@ from PIL import Image
 # Constants
 show_full_data = True
 ctrl_multi = 10
-background_image = "test_image.png"
-camera_translation_amount = 0.1
-camera_rotation_amount = 1
-camera_mod_fov_amount = math.radians(1)
+background_image = "test_image_measures.jpg"
+camera_translation_amount = 0.05
+camera_rotation_amount = 0.1
+camera_mod_fov_amount = 1
 box_translation_amount = 0.1
 box_rotation_amount = math.radians(1)
 box_mod_dimension_amount = 0.1
@@ -48,14 +48,16 @@ selected_box = 0
 show_ground_plane_grid = False
 box_blink_frame = 0
 box_blink_state = False
-camera_rot = [30, 0]
-camera_pos = [0, 0, -5]
-camera_fov = 45
+camera_rot = [30.9, -1.7]
+camera_pos = [0.35, -0.55, -17.9]
+camera_fov = 43
+camera_ncp = 0.1
+camera_fcp = 100
 
 def set_camera():
     glLoadIdentity()
-    gluPerspective(camera_fov, (render_size[0] / render_size[1]), 0.1,
-                   50.0)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
+    gluPerspective(camera_fov, (render_size[0] / render_size[1]), camera_ncp,
+                   camera_fcp)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
     glTranslatef(camera_pos[0], camera_pos[1], camera_pos[2])  # move camera
     glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
     glRotatef(camera_rot[1], 0, 1, 0)
@@ -428,7 +430,7 @@ def instantiate_box(position=(0,0,0), rotation=0, width=1, height=1, length=1, o
     boxes.append(new_box)
 
 
-def mod_camera(x=0, y=0, z=0, rot_a=0, rot_b=0, fov=0):
+def mod_camera(x=0.0, y=0.0, z=0.0, rot_a=0.0, rot_b=0.0, fov=0.0):
     global camera_fov
     camera_pos[0] += x
     camera_pos[1] += y
@@ -450,12 +452,37 @@ while True:
             if pygame.key.get_mods() & pygame.KMOD_ALT:
                 show_ground_plane_grid = not show_ground_plane_grid
 
-            #ALT toggles between camera controls and box controls
+            # ALT toggles between camera controls and box controls
             if show_ground_plane_grid:
-                # Camera translation
+                if event.key == pygame.K_w:
+                    mod_camera(
+                        z=camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_s:
+                    mod_camera(
+                        z=-camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_a:
+                    mod_camera(
+                        x=-camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_d:
+                    mod_camera(
+                        x=camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_q:
+                    mod_camera(
+                        y=camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_e:
+                    mod_camera(
+                        y=-camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+
+                # Camera FOV manip
+                elif event.key == pygame.K_r:
+                    mod_camera(
+                        fov=camera_mod_fov_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_f:
+                    mod_camera(
+                        fov=-camera_mod_fov_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
 
                 # Camera  rotation
-                if event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP:
                     mod_camera(
                         rot_a = camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
                 elif event.key == pygame.K_DOWN:
@@ -467,6 +494,12 @@ while True:
                 elif event.key == pygame.K_RIGHT:
                     mod_camera(
                         rot_b = -camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+
+                # Print positioning
+                elif event.key == pygame.K_p:
+                    print("Camera position: " + str(camera_pos))
+                    print("Camera rotation: " + str(camera_rot))
+                    print("Camera FOV: " + str(camera_fov))
             else:
                 # Box creation and deletion
                 if event.key == pygame.K_RETURN:
@@ -522,6 +555,10 @@ while True:
                     boxes[selected_box].mod_rot(box_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
                 elif event.key == pygame.K_f:
                     boxes[selected_box].mod_rot(-box_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+
+                # Print selected box
+                elif event.key == pygame.K_p:
+                    print(boxes[selected_box].print())
 
     box_blink_frame += 1
     if box_blink_frame >= box_blink_speed:
