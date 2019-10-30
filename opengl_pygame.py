@@ -16,12 +16,14 @@ from PIL import Image
 
 # Constants
 show_full_data = True
-camera_rot = (30, 0)
+ctrl_multi = 10
 background_image = "test_image.png"
+camera_translation_amount = 0.1
+camera_rotation_amount = 1
+camera_mod_fov_amount = math.radians(1)
 box_translation_amount = 0.1
 box_rotation_amount = math.radians(1)
 box_mod_dimension_amount = 0.1
-box_mod_ctrl_multiplier = 10
 box_blink_speed = 15
 box_label_font = OpenGL.GLUT.GLUT_BITMAP_8_BY_13
 box_edge_render_order = (
@@ -46,19 +48,26 @@ selected_box = 0
 show_ground_plane_grid = False
 box_blink_frame = 0
 box_blink_state = False
+camera_rot = [30, 0]
+camera_pos = [0, 0, -5]
+camera_fov = 45
+
+def set_camera():
+    glLoadIdentity()
+    gluPerspective(camera_fov, (render_size[0] / render_size[1]), 0.1,
+                   50.0)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
+    glTranslatef(camera_pos[0], camera_pos[1], camera_pos[2])  # move camera
+    glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
+    glRotatef(camera_rot[1], 0, 1, 0)
 
 # Initialize PyGame Display Window & OpenGL
 pygame.init()
 glutInit()
 render_size = (720, 480)
 render = pygame.display.set_mode(render_size, DOUBLEBUF | OPENGL)  # Double buffer for monitor refresh rate & OpenGL support in Pygame
-gluPerspective(45, (render_size[0] / render_size[1]), 0.1, 50.0)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
+set_camera()
 pygame.display.set_caption("Open GL Test")
 clock = pygame.time.Clock()
-
-# Camera Setup
-glTranslatef(0.0,0.0, -5)  # move camera back 5 units
-glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
 
 # OpenGL Image display shader setup
 vertexShader = """
@@ -410,7 +419,7 @@ def draw_text_3d(pos, font, text):
                 glDisable(GL_BLEND)
 
 
-def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2, object_type="Car"):
+def instantiate_box(position=(0,0,0), rotation=0, width=1, height=1, length=1, object_type="Car"):
     color_value = (random.random(), random.random(), random.random())
     new_box = BoundingBox(position=position, rotation=rotation, length=length, width=width, height=height,
                       object_type=object_type, color_value=color_value)
@@ -418,6 +427,16 @@ def instantiate_box(position=(0,0,0), rotation=0, width=1.5, height=1, length=2,
     selected_box = len(boxes)
     boxes.append(new_box)
 
+
+def mod_camera(x=0, y=0, z=0, rot_a=0, rot_b=0, fov=0):
+    global camera_fov
+    camera_pos[0] += x
+    camera_pos[1] += y
+    camera_pos[2] += z
+    camera_rot[0] += rot_a
+    camera_rot[1] += rot_b
+    camera_fov += fov
+    set_camera()
 
 # Main program runtime loop
 while True:
@@ -427,64 +446,82 @@ while True:
             quit()
 
         if event.type == pygame.KEYDOWN:
-            # Box creation and deletion
-            if event.key == pygame.K_RETURN:
-                instantiate_box()
-                box_blink_frame = 0
-                box_blink_state = True
-            elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:
-                boxes.pop(selected_box)
-                selected_box = min(selected_box,len(boxes)-1)  # clamp selected_box to usable range
-                box_blink_frame = 0
-                box_blink_state = True
-
-            # Box selection
-            elif (event.key == pygame.K_PAGEDOWN or event.key == pygame.K_z) and selected_box > 0 :  # Select Previous Box
-                selected_box -= 1
-                box_blink_frame = 0
-                box_blink_state = True
-            elif (event.key == pygame.K_PAGEUP or event.key == pygame.K_x) and selected_box < len(boxes)-1:  # Select Next Box
-                selected_box += 1
-                box_blink_frame = 0
-                box_blink_state = True
-
             # Toggle debug plane visibility
-            elif pygame.key.get_mods() & pygame.KMOD_ALT:
+            if pygame.key.get_mods() & pygame.KMOD_ALT:
                 show_ground_plane_grid = not show_ground_plane_grid
 
-            # Reset selected box to default values
-            elif event.key == pygame.K_SPACE:
-                boxes[selected_box].reset()
+            #ALT toggles between camera controls and box controls
+            if show_ground_plane_grid:
+                # Camera translation
 
-            # Adjust selected box translation
-            elif event.key == pygame.K_UP:
-                boxes[selected_box].mod_pos((0, 0, -box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
-            elif event.key == pygame.K_DOWN:
-                boxes[selected_box].mod_pos((0, 0, box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
-            elif event.key == pygame.K_LEFT:
-                boxes[selected_box].mod_pos((-box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
-            elif event.key == pygame.K_RIGHT:
-                boxes[selected_box].mod_pos((box_translation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
+                # Camera  rotation
+                if event.key == pygame.K_UP:
+                    mod_camera(
+                        rot_a = camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_DOWN:
+                    mod_camera(
+                        rot_a = -camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_LEFT:
+                    mod_camera(
+                        rot_b = camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_RIGHT:
+                    mod_camera(
+                        rot_b = -camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+            else:
+                # Box creation and deletion
+                if event.key == pygame.K_RETURN:
+                    instantiate_box()
+                    box_blink_frame = 0
+                    box_blink_state = True
+                elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:
+                    boxes.pop(selected_box)
+                    selected_box = min(selected_box,len(boxes)-1)  # clamp selected_box to usable range
+                    box_blink_frame = 0
+                    box_blink_state = True
 
-            # Adjust selected box dimensions
-            elif event.key == pygame.K_w:
-                boxes[selected_box].mod_height(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            elif event.key == pygame.K_s and boxes[selected_box].height - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:
-                boxes[selected_box].mod_height(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            elif event.key == pygame.K_a and boxes[selected_box].width - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Width of Selected Box
-                boxes[selected_box].mod_width(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            elif event.key == pygame.K_d:
-                boxes[selected_box].mod_width(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            elif event.key == pygame.K_q and boxes[selected_box].length - (box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Length / Depth of Selected Box
-                boxes[selected_box].mod_length(-box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            elif event.key == pygame.K_e:
-                boxes[selected_box].mod_length(box_mod_dimension_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                # Box selection
+                elif (event.key == pygame.K_PAGEDOWN or event.key == pygame.K_z) and selected_box > 0 :  # Select Previous Box
+                    selected_box -= 1
+                    box_blink_frame = 0
+                    box_blink_state = True
+                elif (event.key == pygame.K_PAGEUP or event.key == pygame.K_x) and selected_box < len(boxes)-1:  # Select Next Box
+                    selected_box += 1
+                    box_blink_frame = 0
+                    box_blink_state = True
 
-            # Adjust selected box rotation
-            elif event.key == pygame.K_r:
-                boxes[selected_box].mod_rot(box_rotation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            elif event.key == pygame.K_f:
-                boxes[selected_box].mod_rot(-box_rotation_amount * (box_mod_ctrl_multiplier if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                # Reset selected box to default values
+                elif event.key == pygame.K_SPACE:
+                    boxes[selected_box].reset()
+
+                # Adjust selected box translation
+                elif event.key == pygame.K_UP:
+                    boxes[selected_box].mod_pos((0, 0, -box_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
+                elif event.key == pygame.K_DOWN:
+                    boxes[selected_box].mod_pos((0, 0, box_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
+                elif event.key == pygame.K_LEFT:
+                    boxes[selected_box].mod_pos((-box_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
+                elif event.key == pygame.K_RIGHT:
+                    boxes[selected_box].mod_pos((box_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
+
+                # Adjust selected box dimensions
+                elif event.key == pygame.K_w:
+                    boxes[selected_box].mod_height(box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_s and boxes[selected_box].height - (box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:
+                    boxes[selected_box].mod_height(-box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_a and boxes[selected_box].width - (box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Width of Selected Box
+                    boxes[selected_box].mod_width(-box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_d:
+                    boxes[selected_box].mod_width(box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_q and boxes[selected_box].length - (box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)) > 0:  # Adjust Length / Depth of Selected Box
+                    boxes[selected_box].mod_length(-box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_e:
+                    boxes[selected_box].mod_length(box_mod_dimension_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+
+                # Adjust selected box rotation
+                elif event.key == pygame.K_r:
+                    boxes[selected_box].mod_rot(box_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_f:
+                    boxes[selected_box].mod_rot(-box_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
 
     box_blink_frame += 1
     if box_blink_frame >= box_blink_speed:
@@ -495,7 +532,7 @@ while True:
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     draw_background_image()
     if show_ground_plane_grid:
-        draw_ground_plane_grid(100, 0.5)
+        draw_ground_plane_grid(100, 1)
         draw_axis()
     for index in range(0, len(boxes)):
         if selected_box == index and box_blink_state:
