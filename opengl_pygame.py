@@ -15,17 +15,17 @@ from OpenGL.GLUT import *
 from PIL import Image
 
 # Constants
-show_full_data = True
+text_border = 2
+show_full_data = False
 ctrl_multi = 10
 background_image = "test_image.png"
-camera_translation_amount = 0.1
-camera_rotation_amount = 1
-camera_mod_fov_amount = math.radians(1)
+camera_translation_amount = 0.05
+camera_rotation_amount = 0.1
+camera_mod_fov_amount = 1
 box_translation_amount = 0.1
 box_rotation_amount = math.radians(1)
 box_mod_dimension_amount = 0.1
 box_blink_speed = 15
-box_label_font = OpenGL.GLUT.GLUT_BITMAP_8_BY_13
 box_edge_render_order = (
     (0,1),
     (0,3),
@@ -41,21 +41,31 @@ box_edge_render_order = (
     (5,7),
     (8,9)  # forward-facing line
     )
+box_types = (("Car", (1,0,0), (2.0,1.7,5.0)), #(name, default_color, default_size(w,h,l))
+             ("Cyc", (0,1,0), (0.5,1.8,1.0)),
+             ("Ped", (0,0,1), (0.5,1.7,0.5)))
 
 # Global Variables for PyGame & Data Storage
 boxes = []
 selected_box = 0
-show_ground_plane_grid = False
+in_camera_mode = False
+in_place_mode = False
+show_instructions = True
 box_blink_frame = 0
 box_blink_state = False
-camera_rot = [30, 0]
-camera_pos = [0, 0, -5]
-camera_fov = 45
+camera_rot = [30.9, -1.7]
+camera_rot_init = camera_rot.copy()
+camera_pos = [0.35, -0.55, -17.9]
+camera_pos_init = camera_pos.copy()
+camera_fov = 43
+camera_fov_init = camera_fov
+camera_ncp = 0.1
+camera_fcp = 100
 
 def set_camera():
     glLoadIdentity()
-    gluPerspective(camera_fov, (render_size[0] / render_size[1]), 0.1,
-                   50.0)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
+    gluPerspective(camera_fov, (render_size[0] / render_size[1]), camera_ncp,
+                   camera_fcp)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
     glTranslatef(camera_pos[0], camera_pos[1], camera_pos[2])  # move camera
     glRotatef(camera_rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
     glRotatef(camera_rot[1], 0, 1, 0)
@@ -150,15 +160,15 @@ class BoundingBox():
     """
     Documentation is TBD
     """
-    def __init__(self, object_type, color_value, position=(0,0,0), rotation=0, width=1.5, height=1, length=2):
+    def __init__(self, object_type, color_value, position=(0,0,0), rotation=0, size=(1,1,1)):
         self.pos = position
         self.pos_init = position
-        self.length = length
-        self.length_init = length
-        self.width = width
-        self.width_init = width
-        self.height = height
-        self.height_init = height
+        self.length = size[2]
+        self.length_init = self.length
+        self.width = size[0]
+        self.width_init = self.width
+        self.height = size[1]
+        self.height_init = self.height
         self.rot = rotation
         self.rot_init = rotation
         self.object_type = object_type
@@ -285,11 +295,11 @@ class BoundingBox():
     def mod_rot(self,rotation):
         self.set_rot(self.rot + rotation)
 
-    def round_2(self,x):
+    def round_output(self, x):
         return "%.2f" % round(x,2)
 
     def print(self):
-        return "[(" + self.round_2(self.pos[0]) + "," + self.round_2(self.pos[1]) + "," + self.round_2(self.pos[2]) + "),(" + self.round_2(self.width) + "," + self.round_2(self.height) + "," + self.round_2(self.length) + "," + self.round_2(self.rot) + ")]"
+        return "POS:(" + self.round_output(self.pos[0]) + "," + self.round_output(self.pos[1]) + "," + self.round_output(self.pos[2]) + ")  SIZE:" + self.round_output(self.width) + "," + self.round_output(self.height) + "," + self.round_output(self.length) + ") ROT:" + self.round_output(self.rot)
 
 
 def draw_bounding_box(index, selected=False):
@@ -302,10 +312,10 @@ def draw_bounding_box(index, selected=False):
         for vertex in edge:
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
-    if show_full_data and show_ground_plane_grid:
-        draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index) + ": " + boxes[index].print())
+    if show_full_data and in_camera_mode:
+        draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index) + ": " + boxes[index].print())
     else:
-        draw_text_3d(boxes[index].pos, box_label_font, boxes[index].object_type + str(index))
+        draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index))
 
 
 def draw_axis():
@@ -327,7 +337,7 @@ def draw_ground_plane_grid(lines, distance_between_lines):
     plane_max = distance / 2
     plane_min = -plane_max
     glBegin(GL_LINES)
-    glColor3fv((0,0,1))
+    glColor3fv((0.35,0.5,0.25))
     for i in range(0,lines+1):
         glVertex3fv((plane_min + i*distance_between_lines,0,plane_min))
         glVertex3fv((plane_min + i*distance_between_lines,0,plane_max))
@@ -388,47 +398,64 @@ def draw_background_image():
     glUseProgram(0)
 
 
-def draw_text(pos, font, text):
+def draw_2d_box(pos, size, bg_color):
+    new_pos = (pos[0], render_size[1] - pos[1])
+
+    glPushMatrix()
+    glLoadIdentity()
+    glOrtho(0, render_size[0], render_size[1], 0, 0, 1)
+    glBegin(GL_TRIANGLE_STRIP)
+    glColor3f(bg_color[0], bg_color[1], bg_color[2])
+    glVertex2f(new_pos[0], new_pos[1])
+    glVertex2f(new_pos[0], new_pos[1] - size[1])
+    glVertex2f(new_pos[0] + size[0], new_pos[1])
+    glVertex2f(new_pos[0] + size[0], new_pos[1] - size[1])
+    glEnd()
+
+    glPopMatrix()
+
+def draw_text(pos, text, color=(1,1,1), bg_color=(0,0,0)):
+
+    draw_2d_box((pos[0] - text_border, pos[1] - 2 * text_border), (len(text) * 8 + 2 * text_border, 13 + text_border), bg_color)
 
     blending = False
     if glIsEnabled(GL_BLEND) :
         blending = True
 
     # glEnable(GL_BLEND)
-    glColor3f(1,1,1)
+    glColor3f(color[0], color[1], color[2])
     glWindowPos2f(pos[0],pos[1])
     for ch in text:
-        glutBitmapCharacter(font, ctypes.c_int(ord(ch)))
+        glutBitmapCharacter(OpenGL.GLUT.GLUT_BITMAP_8_BY_13, ctypes.c_int(ord(ch)))
 
     if not blending :
         glDisable(GL_BLEND)
 
-def draw_text_3d(pos, font, text):
+def draw_text_3d(pos, text, color=(1,1,1)):
 
             blending = False
             if glIsEnabled(GL_BLEND):
                 blending = True
 
             # glEnable(GL_BLEND)
-            glColor3f(1, 1, 1)
+            glColor3f(color[0], color[1], color[2])
             glRasterPos3f(pos[0],pos[1],pos[2])
             for ch in text:
-                glutBitmapCharacter(font, ctypes.c_int(ord(ch)))
+                glutBitmapCharacter(OpenGL.GLUT.GLUT_BITMAP_8_BY_13, ctypes.c_int(ord(ch)))
 
             if not blending:
                 glDisable(GL_BLEND)
 
 
-def instantiate_box(position=(0,0,0), rotation=0, width=1, height=1, length=1, object_type="Car"):
-    color_value = (random.random(), random.random(), random.random())
-    new_box = BoundingBox(position=position, rotation=rotation, length=length, width=width, height=height,
+def instantiate_box(position=(0,0,0), rotation=0, size=(1,1,1), object_type="Car", color_value=(1,1,1)):
+    new_box = BoundingBox(position=position, rotation=rotation, size=size,
                       object_type=object_type, color_value=color_value)
     global selected_box
     selected_box = len(boxes)
     boxes.append(new_box)
 
 
-def mod_camera(x=0, y=0, z=0, rot_a=0, rot_b=0, fov=0):
+def mod_camera(x=0.0, y=0.0, z=0.0, rot_a=0.0, rot_b=0.0, fov=0.0):
     global camera_fov
     camera_pos[0] += x
     camera_pos[1] += y
@@ -438,6 +465,9 @@ def mod_camera(x=0, y=0, z=0, rot_a=0, rot_b=0, fov=0):
     camera_fov += fov
     set_camera()
 
+def round_output(x):
+    return "%.3f" % round(x,3)
+
 # Main program runtime loop
 while True:
     for event in pygame.event.get():
@@ -446,16 +476,52 @@ while True:
             quit()
 
         if event.type == pygame.KEYDOWN:
-            # Toggle debug plane visibility
+            # Toggle mode
             if pygame.key.get_mods() & pygame.KMOD_ALT:
-                show_ground_plane_grid = not show_ground_plane_grid
+                in_camera_mode = not in_camera_mode
+            # Toggle instruction visibility
+            if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+                show_instructions = not show_instructions
 
-            #ALT toggles between camera controls and box controls
-            if show_ground_plane_grid:
+            # ALT toggles between camera controls and box controls
+            if in_camera_mode:
+                # Camera reset
+                if event.key == pygame.K_SPACE:
+                    camera_pos = camera_pos_init.copy()
+                    camera_rot = camera_rot_init.copy()
+                    camera_fov = camera_fov_init
+                    set_camera()
+
                 # Camera translation
+                elif event.key == pygame.K_w:
+                    mod_camera(
+                        z=camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_s:
+                    mod_camera(
+                        z=-camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_a:
+                    mod_camera(
+                        x=-camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_d:
+                    mod_camera(
+                        x=camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_q:
+                    mod_camera(
+                        y=camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_e:
+                    mod_camera(
+                        y=-camera_translation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+
+                # Camera FOV manip
+                elif event.key == pygame.K_r:
+                    mod_camera(
+                        fov=camera_mod_fov_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
+                elif event.key == pygame.K_f:
+                    mod_camera(
+                        fov=-camera_mod_fov_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
 
                 # Camera  rotation
-                if event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP:
                     mod_camera(
                         rot_a = camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
                 elif event.key == pygame.K_DOWN:
@@ -467,12 +533,38 @@ while True:
                 elif event.key == pygame.K_RIGHT:
                     mod_camera(
                         rot_b = -camera_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
-            else:
-                # Box creation and deletion
-                if event.key == pygame.K_RETURN:
-                    instantiate_box()
+
+                # Print positioning
+                elif event.key == pygame.K_p:
+                    print("Camera position: " + str(camera_pos))
+                    print("Camera rotation: " + str(camera_rot))
+                    print("Camera FOV: " + str(camera_fov))
+            elif in_place_mode:
+                # Box type selection for creation
+                if event.key == pygame.K_1:
+                    instantiate_box(object_type=box_types[0][0], color_value=box_types[0][1], size=box_types[0][2])
                     box_blink_frame = 0
                     box_blink_state = True
+                    in_place_mode = False
+                elif event.key == pygame.K_2:
+                    instantiate_box(object_type=box_types[1][0], color_value=box_types[1][1], size=box_types[1][2])
+                    box_blink_frame = 0
+                    box_blink_state = True
+                    in_place_mode = False
+                elif event.key == pygame.K_3:
+                    instantiate_box(object_type=box_types[2][0], color_value=box_types[2][1], size=box_types[2][2])
+                    box_blink_frame = 0
+                    box_blink_state = True
+                    in_place_mode = False
+                elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE):
+                    in_place_mode = False
+            else:
+                # Box adjustment and deletion
+                if event.key == pygame.K_RETURN:
+                    in_place_mode = True
+                    show_instructions = True
+                elif len(boxes) == 0: # Program will crash if any below values called with 0 index and no boxes
+                    None
                 elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:
                     boxes.pop(selected_box)
                     selected_box = min(selected_box,len(boxes)-1)  # clamp selected_box to usable range
@@ -523,6 +615,10 @@ while True:
                 elif event.key == pygame.K_f:
                     boxes[selected_box].mod_rot(-box_rotation_amount * (ctrl_multi if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
 
+                # Print selected box
+                elif event.key == pygame.K_p:
+                    print(boxes[selected_box].print())
+
     box_blink_frame += 1
     if box_blink_frame >= box_blink_speed:
         box_blink_state = not box_blink_state
@@ -531,14 +627,34 @@ while True:
     # Drawing code
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     draw_background_image()
-    if show_ground_plane_grid:
+    if in_camera_mode:
         draw_ground_plane_grid(100, 1)
         draw_axis()
-    for index in range(0, len(boxes)):
-        if selected_box == index and box_blink_state:
-            draw_bounding_box(index, True)
+    else:
+        for index in range(0, len(boxes)):
+            if selected_box == index and box_blink_state:
+                draw_bounding_box(index, True)
+            else:
+                draw_bounding_box(index)
+    if show_instructions:
+        if not in_camera_mode:
+            if in_place_mode:
+                temp_string = "Cancel-[DEL/BACKSP] "
+                for i in range(0,len(box_types)):
+                    temp_string += " " + box_types[i][0] + "-[" + str(i+1) + "] "
+                draw_text((2, 29), "[BOX ADJUST MODE] - [PLACING BOX]", bg_color=(0.8,0,0))
+                draw_text((2, 15), temp_string, bg_color=(0.8, 0, 0))
+            elif len(boxes) == 0:
+                draw_text((2,29), "[BOX ADJUST MODE]")
+                draw_text((2,15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]")
+            else:
+                draw_text((2,29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(selected_box) + "  " + boxes[selected_box].print())
+                draw_text((2,15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]  Select-[Z,X]  Delete-[DEL/BACKSP]  Reset-[SPACE]")
+                draw_text((2,2),  "Translate-[ARROWS]        Resize-[W,A,S,D,Q,E]       Rotate-[R,F]         PrintPos-[P] ")
         else:
-            draw_bounding_box(index)
+            draw_text((2, 29), "[CAMERA ADJUST MODE]  POS:(" + str(round_output(camera_pos[0])) + "," + str(round_output(camera_pos[1])) + "," + str(round_output(camera_pos[2])) + ")   ROT:(" + str(round_output(camera_rot[0])) + "," + str(round_output(camera_rot[1])) + ")   FOV:" + str(round_output(camera_fov)))
+            draw_text((2, 15), "Mode-[ALT]  Hide-[SHIFT]  Reset-[SPACE]")
+            draw_text((2, 2),  "Translate-[W,A,S,D,E,Q]   Rotate-[ARROWS]   FOV-[R,F]  PrintPos-[P] ")
 
     # Update display and clock
     pygame.display.flip()

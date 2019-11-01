@@ -40,8 +40,8 @@ near_clipping_plane = 0.1
 far_clipping_plane = 50
 persp_temp_a = near_clipping_plane + far_clipping_plane
 persp_temp_b = near_clipping_plane * far_clipping_plane
-persp = np.array([[583.2829786373293,                 0,        320.0,            0],
-                  [                0, 579.4112549695428,        240.0,            0],
+persp = np.array([[583.2829786373293,                 0,       -320.0,            0],
+                  [                0, 579.4112549695428,       -240.0,            0],
                   [                0,                 0, persp_temp_a, persp_temp_b],
                   [                0,                 0,           -1,            0]])
 glLoadIdentity()
