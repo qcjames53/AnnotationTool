@@ -18,7 +18,7 @@ from PIL import Image
 text_border = 2
 show_full_data = False
 ctrl_multi = 10
-background_image = "test_image_measures.jpg"
+background_image = "test_image.png"
 camera_translation_amount = 0.05
 camera_rotation_amount = 0.1
 camera_mod_fov_amount = 1
