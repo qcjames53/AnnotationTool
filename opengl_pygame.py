@@ -1,5 +1,7 @@
 # This document contains sample code from https://rdmilligan.wordpress.com/2016/08/27/opengl-shaders-using-python/
-# It was used to handle most of the image display functionality
+#       It was used to handle most of the image display functionality
+# The GLUT text modules don't work properly with our setup, so installation of several files from here may be needed:
+#      https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html
 
 # Classes: car, pedestrian, cyclist
 
@@ -81,7 +83,7 @@ clock = pygame.time.Clock()
 
 # OpenGL Image display shader setup
 vertexShader = """
-    #version 330 core
+    #version 120
 
     attribute vec3 vert;
     attribute vec2 uV;
@@ -95,14 +97,14 @@ vertexShader = """
     }
 """
 fragmentShader = """
-    #version 330 core
+    #version 120
 
     in vec2 UV;
     uniform sampler2D backgroundTexture;
     out vec3 colour;
 
     void main() {
-      colour = texture(backgroundTexture, UV).rgb;
+      colour = texture2D(backgroundTexture, UV).rgb;
     }
 """
 vs = compileShader(vertexShader, GL_VERTEX_SHADER)
@@ -154,6 +156,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, backgroundImage.size[0], backgroundImage.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE,
              backgroundImageData)
 
+import math
 
 # Bounding Box Object Class
 class BoundingBox():
@@ -302,6 +305,7 @@ class BoundingBox():
         return "POS:(" + self.round_output(self.pos[0]) + "," + self.round_output(self.pos[1]) + "," + self.round_output(self.pos[2]) + ")  SIZE:" + self.round_output(self.width) + "," + self.round_output(self.height) + "," + self.round_output(self.length) + ") ROT:" + self.round_output(self.rot)
 
 
+
 def draw_bounding_box(index, selected=False):
     glBegin(GL_LINES)
     if selected:
@@ -313,7 +317,7 @@ def draw_bounding_box(index, selected=False):
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
     if show_full_data and in_camera_mode:
-        draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index) + ": " + boxes[index].print_obj())
+        draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index) + ": " + boxes[index].to_string())
     else:
         draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index))
 
@@ -617,7 +621,7 @@ while True:
 
                 # Print selected box
                 elif event.key == pygame.K_p:
-                    print(boxes[selected_box].print_obj())
+                    print(boxes[selected_box].to_string())
 
     box_blink_frame += 1
     if box_blink_frame >= box_blink_speed:
@@ -648,7 +652,7 @@ while True:
                 draw_text((2,29), "[BOX ADJUST MODE]")
                 draw_text((2,15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]")
             else:
-                draw_text((2,29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(selected_box) + "  " + boxes[selected_box].print_obj())
+                draw_text((2,29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(selected_box) + "  " + boxes[selected_box].to_string())
                 draw_text((2,15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]  Select-[Z,X]  Delete-[DEL/BACKSP]  Reset-[SPACE]")
                 draw_text((2,2),  "Translate-[ARROWS]        Resize-[W,A,S,D,Q,E]       Rotate-[R,F]         PrintPos-[P] ")
         else:
