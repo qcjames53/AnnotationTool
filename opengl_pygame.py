@@ -298,7 +298,7 @@ class BoundingBox():
     def round_output(self, x):
         return "%.2f" % round(x,2)
 
-    def print(self):
+    def print_obj(self):
         return "POS:(" + self.round_output(self.pos[0]) + "," + self.round_output(self.pos[1]) + "," + self.round_output(self.pos[2]) + ")  SIZE:" + self.round_output(self.width) + "," + self.round_output(self.height) + "," + self.round_output(self.length) + ") ROT:" + self.round_output(self.rot)
 
 
@@ -313,7 +313,7 @@ def draw_bounding_box(index, selected=False):
             glVertex3fv(boxes[index].vertices[vertex])
     glEnd()
     if show_full_data and in_camera_mode:
-        draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index) + ": " + boxes[index].print())
+        draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index) + ": " + boxes[index].print_obj())
     else:
         draw_text_3d(boxes[index].pos, boxes[index].object_type + str(index))
 
@@ -617,7 +617,7 @@ while True:
 
                 # Print selected box
                 elif event.key == pygame.K_p:
-                    print(boxes[selected_box].print())
+                    print(boxes[selected_box].print_obj())
 
     box_blink_frame += 1
     if box_blink_frame >= box_blink_speed:
@@ -648,7 +648,7 @@ while True:
                 draw_text((2,29), "[BOX ADJUST MODE]")
                 draw_text((2,15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]")
             else:
-                draw_text((2,29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(selected_box) + "  " + boxes[selected_box].print())
+                draw_text((2,29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(selected_box) + "  " + boxes[selected_box].print_obj())
                 draw_text((2,15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]  Select-[Z,X]  Delete-[DEL/BACKSP]  Reset-[SPACE]")
                 draw_text((2,2),  "Translate-[ARROWS]        Resize-[W,A,S,D,Q,E]       Rotate-[R,F]         PrintPos-[P] ")
         else:
