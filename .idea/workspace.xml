@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/opengl/bounding_box.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opengl/camera.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opengl/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/opengl/test_image.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/AnnotationTool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/AnnotationTool.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/opengl/render.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/opengl/test_image_measures.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/opengl_pygame.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl_pygame.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opengl/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opengl/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,13 +44,13 @@
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/opengl_pygame.py" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool" />
-      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl" />
       <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool" />
+      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -234,7 +232,8 @@
       <workItem from="1572280556640" duration="6662000" />
       <workItem from="1572453653698" duration="7833000" />
       <workItem from="1572621394804" duration="10002000" />
-      <workItem from="1572888911421" duration="8040000" />
+      <workItem from="1572888911421" duration="8101000" />
+      <workItem from="1573067531763" duration="3462000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -376,7 +375,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572889023679</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Split opengl_pygame into several classes and generally cleaned up the code.">
+      <created>1572898069397</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1572898069397</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -416,7 +422,8 @@
     <MESSAGE value="Added instructions, default sizes, and types. The code is still very messy, but we will work on splitting it soon." />
     <MESSAGE value="Changed test image" />
     <MESSAGE value="Merging" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merging" />
+    <MESSAGE value="Split opengl_pygame into several classes and generally cleaned up the code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Split opengl_pygame into several classes and generally cleaned up the code." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -429,6 +436,6 @@
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_simple_old.coverage" NAME="opengl_pygame_simple_old Coverage Results" MODIFIED="1572454190467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1572897945307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1573071019897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
   </component>
 </project>

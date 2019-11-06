@@ -1,6 +1,6 @@
 class Camera:
     '''
-    A class to store camera parameters for the main function.
+    A class to store camera parameters for the render function.
     '''
     def __init__(self, pos, rot, fov, ncp, fcp):
         self.pos = pos.copy()
