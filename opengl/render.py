@@ -16,7 +16,7 @@ from PIL import Image
 from camera import *
 
 
-def draw(boxes, box_types):
+def draw(boxes, box_types, frame_number, number_of_frames):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     draw_background_image()
     if in_camera_mode:
@@ -31,30 +31,34 @@ def draw(boxes, box_types):
                 draw_bounding_box(box, index)
             index += 1
     if show_instructions:
-        if not in_camera_mode:
-            if in_place_mode:
-                temp_string = "Cancel-[DEL/BACKSP] "
-                for i in range(0, len(box_types)):
-                    temp_string += " " + box_types[i][0] + "-[" + str(i + 1) + "] "
-                draw_2d_text((2, 29), "[BOX ADJUST MODE] - [PLACING BOX]", bg_color=(0.8, 0, 0))
-                draw_2d_text((2, 15), temp_string, bg_color=(0.8, 0, 0))
-            elif len(boxes) == 0:
-                draw_2d_text((2, 29), "[BOX ADJUST MODE]")
-                draw_2d_text((2, 15), "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]")
-            else:
-                draw_2d_text((2, 29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(
-                    selected_box) + "  " + boxes[selected_box].to_string())
-                draw_2d_text((2, 15),
-                             "Mode-[ALT]  Hide-[SHIFT]  New-[ENTER]  Select-[Z,X]  Delete-[DEL/BACKSP]  Reset-[SPACE]")
-                draw_2d_text((2, 2),
-                             "Translate-[ARROWS]        Resize-[W,A,S,D,Q,E]       Rotate-[R,F]         PrintPos-[P] ")
-        else:
+        draw_2d_text((2, render_size[1]-11), "Frame " + str(frame_number) + " of " + str(number_of_frames) +
+                     "  ChangeFrame[-,+,0]")
+        if in_frame_mode:
+            draw_2d_text((render_size[0] / 2 - 67, render_size[1] / 2 - 4), "Enter frame: " + str(frame_select_number),
+                         bg_color=(0.8, 0, 0))
+        elif in_camera_mode:
             draw_2d_text((2, 29), "[CAMERA ADJUST MODE]  POS:(" + str(round_output(camera.pos[0])) + "," + str(
                 round_output(camera.pos[1])) + "," + str(round_output(camera.pos[2])) + ")   ROT:(" + str(
                 round_output(camera.rot[0])) + "," + str(round_output(camera.rot[1])) + ")   FOV:" + str(
                 round_output(camera.fov)))
-            draw_2d_text((2, 15), "Mode-[ALT]  Hide-[SHIFT]  Reset-[SPACE]")
-            draw_2d_text((2, 2), "Translate-[W,A,S,D,E,Q]   Rotate-[ARROWS]   FOV-[R,F]  PrintPos-[P] ")
+            draw_2d_text((2, 15), "Mode[ALT]  Hide[SHIFT]  Reset[SPACE]")
+            draw_2d_text((2, 2),  "Translate[W,A,S,D,E,Q]  Rotate[ARROWS]   FOV[R,F]  PrintPos[P]")
+        elif in_place_mode:
+            temp_string = "Cancel[DEL/BACKSP]"
+            for i in range(0, len(box_types)):
+                temp_string += " " + box_types[i][0] + "[" + str(i + 1) + "] "
+            draw_2d_text((2, 29), "[BOX ADJUST MODE] - [PLACING BOX]", bg_color=(0.8, 0, 0))
+            draw_2d_text((2, 15), temp_string, bg_color=(0.8, 0, 0))
+        elif len(boxes) == 0:
+            draw_2d_text((2, 29), "[BOX ADJUST MODE]")
+            draw_2d_text((2, 15), "Mode[ALT]  Hide[SHIFT]  New[ENTER]")
+        else:
+            draw_2d_text((2, 29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].object_type + str(
+                selected_box) + "  " + boxes[selected_box].to_string())
+            draw_2d_text((2, 15),
+                         "Mode[ALT]  Hide[SHIFT]  New[ENTER]  Select[Z,X]  Delete[DEL/BACKSP]  Reset[SPACE]")
+            draw_2d_text((2, 2),
+                         "Translate[ARROWS]       Resize[W,A,S,D,Q,E]      Rotate[R,F]         PrintPos[P] ")
 
 
 def draw_2d_box(pos, size, bg_color):
@@ -189,20 +193,42 @@ def draw_ground_plane_grid(lines, distance_between_lines):
 def input_handler(event, boxes, box_types):
     global box_blink_frame
     global box_blink_state
+    global frame_select_number
     global in_camera_mode
+    global in_frame_mode
     global in_place_mode
     global selected_box
     global show_instructions
 
+    # Next Image / Previous Image controls
+    if event.key == pygame.K_EQUALS:
+        draw_2d_text((render_size[0]/2-67,render_size[1]/2-4),"Compiling new image shader", bg_color=(0.8, 0, 0))
+        return "f+"
+    elif event.key == pygame.K_MINUS:
+        draw_2d_text((render_size[0]/2-67,render_size[1]/2-4), "Compiling new image shader", bg_color=(0.8, 0, 0))
+        return "f-"
+    elif event.key == pygame.K_0:
+        in_frame_mode = True
     # Toggle mode
-    if pygame.key.get_mods() & pygame.KMOD_ALT:
+    elif pygame.key.get_mods() & pygame.KMOD_ALT:
         in_camera_mode = not in_camera_mode
     # Toggle instruction visibility
-    if pygame.key.get_mods() & pygame.KMOD_SHIFT:
+    elif pygame.key.get_mods() & pygame.KMOD_SHIFT:
         show_instructions = not show_instructions
-
     # ALT toggles between camera controls and box controls
-    if in_camera_mode:
+    if in_frame_mode:
+        if event.key == pygame.K_RETURN:
+            in_frame_mode = False
+            draw_2d_text((render_size[0] / 2 - 67, render_size[1] / 2 - 4), "Compiling new image shader",
+                         bg_color=(0.8, 0, 0))
+            temp = frame_select_number
+            frame_select_number = 0
+            return "f#" + str(temp)
+        elif event.key == pygame.K_BACKSPACE:
+            frame_select_number = math.floor(frame_select_number / 10)
+        elif pygame.key.name(event.key).isdigit():
+            frame_select_number = frame_select_number * 10 + int(pygame.key.name(event.key))
+    elif in_camera_mode:
         # Camera reset
         if event.key == pygame.K_SPACE:
             camera.reset()
@@ -349,10 +375,9 @@ def round_output(x):
     return "%.3f" % round(x,3)
 
 
-def set_background_image(background_image):
+def set_background_image(backgroundImage):
     # set background texture
     global backgroundTexture
-    backgroundImage = Image.open(background_image)
     backgroundImageData = numpy.array(list(backgroundImage.getdata()), numpy.uint8)
     backgroundTexture = glGenTextures(1)
     glBindTexture(GL_TEXTURE_2D, backgroundTexture)
@@ -371,7 +396,7 @@ def set_camera():
     glRotatef(camera.rot[1], 0, 1, 0)
 
 
-def render_screen(boxes, box_types):
+def render_screen(boxes, box_types, frame, number_of_frames):
     global box_blink_frame
     global box_blink_state
 
@@ -393,7 +418,8 @@ def render_screen(boxes, box_types):
         box_blink_frame = 0
 
     # Draw screen at 30 fps
-    draw(boxes, box_types)
+    if output == 0:
+        draw(boxes, box_types, frame, number_of_frames)
     pygame.display.flip()
     clock.tick(30)
     return output
@@ -417,7 +443,9 @@ text_border = 2
 box_blink_frame = 0
 box_blink_state = False
 camera = Camera([0.35, -0.55, -17.9], [30.9, -1.7], 43, 0.1, 100) # Camera object to store camera variables
+frame_select_number = 0
 in_camera_mode = False # True if user is adjusting camera
+in_frame_mode = False # True if user is selecting a frame
 in_place_mode = False # True if user is placing box
 selected_box = 0 # Index of selected box in boxes array
 show_instructions = True # True if instructions are visible of screen
