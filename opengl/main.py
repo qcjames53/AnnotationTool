@@ -37,7 +37,7 @@ box_types = (("Car", (1,0,0), (2.0,1.7,5.0)),  # (name, default_color, default_s
              ("Ped", (0,0,1), (0.5,1.7,0.5)),
              ("Tre", (1,1,0), (9.0, 20,9.0)))
 current_frame = 0
-number_of_images = 5148
+number_of_images = 100
 setup_frames(number_of_images, "images/img*.jpg")
 change_frame()
 

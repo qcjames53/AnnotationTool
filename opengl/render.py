@@ -34,8 +34,8 @@ def draw(boxes, box_types, frame_number, number_of_frames):
         draw_2d_text((2, render_size[1]-11), "Frame " + str(frame_number) + " of " + str(number_of_frames) +
                      "  ChangeFrame[-,+,0]")
         if in_frame_mode:
-            draw_2d_text((render_size[0] / 2 - 67, render_size[1] / 2 - 4), "Enter frame: " + str(frame_select_number),
-                         bg_color=(0.8, 0, 0))
+            draw_2d_text((render_size[0] / 2 - ((len(str(frame_select_number))+13)*4), render_size[1] / 2 - 4),
+                         "Enter frame: " + str(frame_select_number), bg_color=(0.8, 0, 0))
         elif in_camera_mode:
             draw_2d_text((2, 29), "[CAMERA ADJUST MODE]  POS:(" + str(round_output(camera.pos[0])) + "," + str(
                 round_output(camera.pos[1])) + "," + str(round_output(camera.pos[2])) + ")   ROT:(" + str(
@@ -47,8 +47,8 @@ def draw(boxes, box_types, frame_number, number_of_frames):
             temp_string = "Cancel[DEL/BACKSP]"
             for i in range(0, len(box_types)):
                 temp_string += " " + box_types[i][0] + "[" + str(i + 1) + "] "
-            draw_2d_text((2, 29), "[BOX ADJUST MODE] - [PLACING BOX]", bg_color=(0.8, 0, 0))
-            draw_2d_text((2, 15), temp_string, bg_color=(0.8, 0, 0))
+            draw_2d_text((render_size[0] / 2 - (len(temp_string)*4), render_size[1] / 2 - 4), temp_string,
+                         bg_color=(0.8, 0, 0))
         elif len(boxes) == 0:
             draw_2d_text((2, 29), "[BOX ADJUST MODE]")
             draw_2d_text((2, 15), "Mode[ALT]  Hide[SHIFT]  New[ENTER]")
@@ -209,6 +209,7 @@ def input_handler(event, boxes, box_types):
         return "f-"
     elif event.key == pygame.K_0:
         in_frame_mode = True
+        show_instructions = True
     # Toggle mode
     elif pygame.key.get_mods() & pygame.KMOD_ALT:
         in_camera_mode = not in_camera_mode
