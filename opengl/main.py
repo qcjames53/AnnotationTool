@@ -41,6 +41,7 @@ BOX_TYPES = (("Car", (1, 0, 0), (2.0, 1.7, 5.0)),  # (name, default_color, defau
              ("Ped", (0,0,1), (0.5,1.7,0.5)),
              ("Tre", (1,1,0), (9.0, 20,9.0)))
 NUMBER_OF_FRAMES = 100
+OUTPUT_FILE_NAME = "output.txt"
 
 # Global variables
 current_frame = 0
@@ -57,7 +58,7 @@ while True:
     if str(output).isdigit() and 0 < output < 10:
         instantiate_box(position=(0,0,0), rotation=0, object_type=BOX_TYPES[output - 1][0],
                         color_value=BOX_TYPES[output - 1][1], size=BOX_TYPES[output - 1][2])
-    elif output == "f-" and current_frame > 1:
+    elif output == "f-" and current_frame >= 1:
         current_frame -= 1
         change_frame()
     elif output == "f+" and current_frame < (NUMBER_OF_FRAMES - 1):
@@ -68,3 +69,17 @@ while True:
         if 0 < index <= NUMBER_OF_FRAMES:
             current_frame = index - 1
             change_frame()
+    elif output == "output":
+        output_string = ""
+        for frame in frames:
+            output_string += "["
+            for i in range(0,len(frame[0])):
+                output_string += "[" + frame[0][i].object_type + str(
+                i) + "," + frame[0][i].to_string_torch() + "]"
+                if i < len(frame[0])-1:
+                    output_string += ","
+            output_string += "],\n"
+        f = open(OUTPUT_FILE_NAME,"w")
+        f.write(output_string)
+        f.close()
+        print("Outputted to file " + OUTPUT_FILE_NAME)

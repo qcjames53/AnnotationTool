@@ -145,3 +145,6 @@ class BoundingBox():
 
     def to_string(self):
         return "POS:" + self.round_output(self.pos[0]) + "," + self.round_output(self.pos[1]) + "," + self.round_output(self.pos[2]) + "  SIZE:" + self.round_output(self.width) + "," + self.round_output(self.height) + "," + self.round_output(self.length) + " ROT:" + self.round_output(self.rot)
+
+    def to_string_torch(self):
+        return str(self.pos) + ",(" + str(self.width) + "," + str(self.height) + "," + str(self.length) + ")," + str(self.rot)

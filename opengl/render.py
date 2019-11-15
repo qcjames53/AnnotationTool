@@ -200,8 +200,11 @@ def input_handler(event, boxes, box_types):
     global selected_box
     global show_instructions
 
+    # File output of data
+    if event.key == pygame.K_o:
+        return "output"
     # Next Image / Previous Image controls
-    if event.key == pygame.K_EQUALS:
+    elif event.key == pygame.K_EQUALS:
         draw_2d_text((RENDER_SIZE[0] / 2 - 67, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader", bg_color=(0.8, 0, 0))
         return "f+"
     elif event.key == pygame.K_MINUS:
@@ -296,6 +299,7 @@ def input_handler(event, boxes, box_types):
             box_blink_frame = 0
             box_blink_state = True
             in_place_mode = False
+            selected_box = len(boxes)
             return int(pygame.key.name(event.key))
         elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE):
             in_place_mode = False
