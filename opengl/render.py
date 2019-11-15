@@ -202,6 +202,7 @@ def input_handler(event, boxes, box_types):
 
     # File output of data
     if event.key == pygame.K_o:
+        draw_2d_text((RENDER_SIZE[0] / 2 - 35, RENDER_SIZE[1] / 2 - 4), "Saving To File", bg_color=(0.8, 0, 0))
         return "output"
     # Next Image / Previous Image controls
     elif event.key == pygame.K_EQUALS:
