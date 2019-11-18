@@ -206,10 +206,10 @@ def input_handler(event, boxes, box_types):
         return "output"
     # Next Image / Previous Image controls
     elif event.key == pygame.K_EQUALS:
-        draw_2d_text((RENDER_SIZE[0] / 2 - 67, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader", bg_color=(0.8, 0, 0))
+        draw_2d_text((RENDER_SIZE[0] / 2 - 104, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader", bg_color=(0.8, 0, 0))
         return "f+"
     elif event.key == pygame.K_MINUS:
-        draw_2d_text((RENDER_SIZE[0] / 2 - 67, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader", bg_color=(0.8, 0, 0))
+        draw_2d_text((RENDER_SIZE[0] / 2 - 104, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader", bg_color=(0.8, 0, 0))
         return "f-"
     elif event.key == pygame.K_0:
         in_frame_mode = True
@@ -224,7 +224,7 @@ def input_handler(event, boxes, box_types):
     if in_frame_mode:
         if event.key == pygame.K_RETURN:
             in_frame_mode = False
-            draw_2d_text((RENDER_SIZE[0] / 2 - 67, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader",
+            draw_2d_text((RENDER_SIZE[0] / 2 - 104, RENDER_SIZE[1] / 2 - 4), "Compiling new image shader",
                          bg_color=(0.8, 0, 0))
             temp = frame_select_number
             frame_select_number = 0

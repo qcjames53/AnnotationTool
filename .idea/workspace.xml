@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opengl/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opengl/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/output.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opengl/render.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/render.py" afterDir="false" />
     </list>
@@ -234,7 +235,9 @@
       <workItem from="1573067531763" duration="3595000" />
       <workItem from="1573229041434" duration="10078000" />
       <workItem from="1573495057287" duration="1016000" />
-      <workItem from="1573837646555" duration="2993000" />
+      <workItem from="1573837646555" duration="3052000" />
+      <workItem from="1573845111668" duration="18000" />
+      <workItem from="1574099070283" duration="2341000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -418,7 +421,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573843794605</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="GUI changes for file output.">
+      <created>1573844949114</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1573844949114</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -439,7 +449,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Added experimental GNU GPL Tinker 3D Library" />
     <MESSAGE value="End of day changes 2019-09-23" />
     <MESSAGE value="Added proper background image support, rotation, calibration, and a little UI" />
     <MESSAGE value="Began work on mouse support. Not complete, but in the works. Fixed rotation." />
@@ -464,7 +473,8 @@
     <MESSAGE value="Minor UI changes." />
     <MESSAGE value="Documentation additions and refactoring." />
     <MESSAGE value="Added file outputs for future Pytorch data collection. Pressing 'O' will output all frames to given file." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added file outputs for future Pytorch data collection. Pressing 'O' will output all frames to given file." />
+    <MESSAGE value="GUI changes for file output." />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI changes for file output." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -477,6 +487,6 @@
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_simple_old.coverage" NAME="opengl_pygame_simple_old Coverage Results" MODIFIED="1572454190467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1573843892586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1574100187773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
   </component>
 </project>

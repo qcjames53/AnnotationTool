@@ -5,7 +5,7 @@ from render import *
 
 # Sets the background image of the render process to the current frame
 def change_frame():
-    set_background_image(frames[current_frame][1])
+    set_background_image(frames[current_frame])
 
 
 # Adds a bounding box to the current frame based on several parameters
@@ -13,39 +13,34 @@ def instantiate_box(position, rotation, size, object_type, color_value):
     new_box = BoundingBox(position=position, rotation=rotation, size=size,
                       object_type=object_type, color_value=color_value)
     global selected_box
-    selected_box = len(frames[current_frame][0])
-    frames[current_frame][0].append(new_box)
+    selected_box = len(boxes)
+    boxes.append(new_box)
 
 
 # Loads a given number of frames following a naming convention of type "*.png" where * is replaced by integers from
 # 000001 to number_of_frames (each integer padded to 6 decimal places)
 def setup_frames(number_of_frames, naming_convention):
-    print ("Loading " + str(number_of_frames) + " images of type " + naming_convention)
+    print("Loading " + str(number_of_frames) + " images of type " + naming_convention)
     for i in range(1,number_of_frames+1):
-        container_list = []  # A list to hold boxes and the frame, along with any other data for the future
-        boxes = []  # A list of all stored bounding boxes
         index = str(i)
         while len(index) < 6:  # Padding
             index = "0" + index
         PIL_image = Image.open(naming_convention.replace("*",index))
-
-        container_list.append(boxes)
-        container_list.append(PIL_image)
-        frames.append(container_list)
+        frames.append(PIL_image)
     print ("Loading complete")
 
 
 # Global constants
 BOX_TYPES = (("Car", (1, 0, 0), (2.0, 1.7, 5.0)),  # (name, default_color, default_size(w,h,l))
              ("Cyc", (0,1,0), (0.5,1.8,1.0)),
-             ("Ped", (0,0,1), (0.5,1.7,0.5)),
-             ("Tre", (1,1,0), (9.0, 20,9.0)))
+             ("Ped", (0,0,1), (0.5,1.7,0.5)))
 NUMBER_OF_FRAMES = 100
 OUTPUT_FILE_NAME = "output.txt"
 
 # Global variables
 current_frame = 0
 frames = []
+boxes = []
 
 
 # Initial setup
@@ -54,7 +49,7 @@ change_frame()
 
 # Main program loop. Limited to 30fps by render system
 while True:
-    output = render_screen(frames[current_frame][0], BOX_TYPES, current_frame + 1, NUMBER_OF_FRAMES)  # Returns 0 unless a box needs to be instantiated
+    output = render_screen(boxes, BOX_TYPES, current_frame + 1, NUMBER_OF_FRAMES)  # Returns 0 unless a box needs to be instantiated
     if str(output).isdigit() and 0 < output < 10:
         instantiate_box(position=(0,0,0), rotation=0, object_type=BOX_TYPES[output - 1][0],
                         color_value=BOX_TYPES[output - 1][1], size=BOX_TYPES[output - 1][2])
@@ -73,10 +68,10 @@ while True:
         output_string = ""
         for frame in frames:
             output_string += "["
-            for i in range(0,len(frame[0])):
-                output_string += "[" + frame[0][i].object_type + str(
-                i) + "," + frame[0][i].to_string_torch() + "]"
-                if i < len(frame[0])-1:
+            for i in range(0,len(boxes)):
+                output_string += "[" + boxes[i].object_type + str(
+                i) + "," + boxes[i].to_string_torch() + "]"
+                if i < len(boxes)-1:
                     output_string += ","
             output_string += "],\n"
         f = open(OUTPUT_FILE_NAME,"w")
