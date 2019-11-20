@@ -69,7 +69,7 @@ while True:
     elif output == "output":
         output_string = ""
         for box in boxes:
-            output_string += box.to_string()
+            output_string += box.to_string() + "\n"
         f = open(OUTPUT_FILE_NAME,"w")
         f.write(output_string)
         f.close()
