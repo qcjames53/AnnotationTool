@@ -11,8 +11,8 @@ class BoundingBox():
         self.occluded = occluded
         self.alpha = alpha
         self.bbox = bbox
-        self.dimensions = dimensions
-        self.location = location
+        self.dimensions = [dimensions[0], dimensions[1], dimensions[2]]
+        self.location = [location[0], location[1], location[2]]
         self.rotation_y = rotation_y
 
         self.color_value = color_value
@@ -116,7 +116,7 @@ class BoundingBox():
         self.rotation_y = rotation_y
         self.build_vertices()
 
-    def mod_rotation_yw(self, rotation_y):
+    def mod_rotation_y(self, rotation_y):
         self.set_rotation_y(self.rotation_y + rotation_y)
 
     def round_output(self, x):
