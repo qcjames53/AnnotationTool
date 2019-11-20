@@ -20,7 +20,7 @@ def draw(boxes, box_types, frame_number, number_of_frames):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     draw_background_image()
     if in_camera_mode:
-        draw_ground_plane_grid(100, 1)
+        draw_ground_plane_grid(200, 1)
         draw_axis()
     else:
         index = 0
@@ -333,10 +333,10 @@ def input_handler(event, boxes, box_types):
         # Adjust selected box translation
         elif event.key == pygame.K_UP:
             boxes[selected_box].mod_location(
-                (0, 0, -BOX_TRANSLATION_AMOUNT * (CTRL_MULTI if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
+                (0, 0, BOX_TRANSLATION_AMOUNT * (CTRL_MULTI if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
         elif event.key == pygame.K_DOWN:
             boxes[selected_box].mod_location(
-                (0, 0, BOX_TRANSLATION_AMOUNT * (CTRL_MULTI if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
+                (0, 0, -BOX_TRANSLATION_AMOUNT * (CTRL_MULTI if pygame.key.get_mods() & pygame.KMOD_CTRL else 1)))
         elif event.key == pygame.K_LEFT:
             boxes[selected_box].mod_location(
                 (-BOX_TRANSLATION_AMOUNT * (CTRL_MULTI if pygame.key.get_mods() & pygame.KMOD_CTRL else 1), 0, 0))
@@ -448,7 +448,7 @@ TEXT_BORDER = 2
 # Global Variables for PyGame & Data Storage
 box_blink_frame = 0
 box_blink_state = False
-camera = Camera([0.35, -0.55, -17.9], [30.9, -1.7], 43, 0.1, 100) # Camera object to store camera variables
+camera = Camera([0.0, -0.55, -21.7], [204.8, 1.4], 35, 0.1, 200) # Camera object to store camera variables
 frame_select_number = 0
 in_camera_mode = False # True if user is adjusting camera
 in_frame_mode = False # True if user is selecting a frame

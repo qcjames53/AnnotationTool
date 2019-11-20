@@ -28,14 +28,14 @@ class BoundingBox():
         v0 = (v0_x2,v0_y,v0_z2)
 
         v1_x = self.location[0] + self.dimensions[1] / 2
-        v1_y = self.location[1] + self.dimensions[0]
+        v1_y = self.location[1] - self.dimensions[0]
         v1_z = self.location[2] - self.dimensions[2] / 2
         v1_x2 = self.location[0] + ((v1_x-self.location[0]) * math.cos(self.rotation_y) - (v1_z-self.location[2]) * math.sin(self.rotation_y))
         v1_z2 = self.location[2] + ((v1_z-self.location[2]) * math.cos(self.rotation_y) + (v1_x-self.location[0]) * math.sin(self.rotation_y))
         v1 = (v1_x2, v1_y, v1_z2)
 
         v2_x = self.location[0] - self.dimensions[1] / 2
-        v2_y = self.location[1] + self.dimensions[0]
+        v2_y = self.location[1] - self.dimensions[0]
         v2_z = self.location[2] - self.dimensions[2] / 2
         v2_x2 = self.location[0] + ((v2_x-self.location[0]) * math.cos(self.rotation_y) - (v2_z-self.location[2]) * math.sin(self.rotation_y))
         v2_z2 = self.location[2] + ((v2_z-self.location[2]) * math.cos(self.rotation_y) + (v2_x-self.location[0]) * math.sin(self.rotation_y))
@@ -56,7 +56,7 @@ class BoundingBox():
         v4 = (v4_x2, v4_y, v4_z2)
 
         v5_x = self.location[0] + self.dimensions[1] / 2
-        v5_y = self.location[1] + self.dimensions[0]
+        v5_y = self.location[1] - self.dimensions[0]
         v5_z = self.location[2] + self.dimensions[2] / 2
         v5_x2 = self.location[0] + ((v5_x-self.location[0]) * math.cos(self.rotation_y) - (v5_z-self.location[2]) * math.sin(self.rotation_y))
         v5_z2 = self.location[2] + ((v5_z-self.location[2]) * math.cos(self.rotation_y) + (v5_x-self.location[0]) * math.sin(self.rotation_y))
@@ -70,21 +70,21 @@ class BoundingBox():
         v6 = (v6_x2, v6_y, v6_z2)
 
         v7_x = self.location[0] - self.dimensions[1] / 2
-        v7_y = self.location[1] + self.dimensions[0]
+        v7_y = self.location[1] - self.dimensions[0]
         v7_z = self.location[2] + self.dimensions[2] / 2
         v7_x2 = self.location[0] + ((v7_x-self.location[0]) * math.cos(self.rotation_y) - (v7_z-self.location[2]) * math.sin(self.rotation_y))
         v7_z2 = self.location[2] + ((v7_z-self.location[2]) * math.cos(self.rotation_y) + (v7_x-self.location[0]) * math.sin(self.rotation_y))
         v7 = (v7_x2, v7_y, v7_z2)
 
         v8_x = self.location[0]
-        v8_y = self.location[1] + self.dimensions[0] / 2
+        v8_y = self.location[1] - self.dimensions[0] / 2
         v8_z = self.location[2] + self.dimensions[2] / 2
         v8_x2 = self.location[0] + ((v8_x - self.location[0]) * math.cos(self.rotation_y) - (v8_z - self.location[2]) * math.sin(self.rotation_y))
         v8_z2 = self.location[2] + ((v8_z - self.location[2]) * math.cos(self.rotation_y) + (v8_x - self.location[0]) * math.sin(self.rotation_y))
         v8 = (v8_x2, v8_y, v8_z2)
 
         v9_x = self.location[0]
-        v9_y = self.location[1] + self.dimensions[0] / 2
+        v9_y = self.location[1] - self.dimensions[0] / 2
         v9_z = self.location[2] + self.dimensions[2] / 2 + 1
         v9_x2 = self.location[0] + ((v9_x - self.location[0]) * math.cos(self.rotation_y) - (v9_z - self.location[2]) * math.sin(self.rotation_y))
         v9_z2 = self.location[2] + ((v9_z - self.location[2]) * math.cos(self.rotation_y) + (v9_x - self.location[0]) * math.sin(self.rotation_y))
