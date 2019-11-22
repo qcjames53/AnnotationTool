@@ -4,6 +4,8 @@
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opengl/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opengl/output.txt" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/output.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/opengl/render.py" beforeDir="false" afterPath="$PROJECT_DIR$/opengl/render.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -236,7 +238,8 @@
       <workItem from="1573837646555" duration="3052000" />
       <workItem from="1573845111668" duration="18000" />
       <workItem from="1574099070283" duration="7693000" />
-      <workItem from="1574270766271" duration="3478000" />
+      <workItem from="1574270766271" duration="3513000" />
+      <workItem from="1574443231159" duration="4051000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -455,7 +458,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574274628420</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Small fixes.">
+      <created>1574278805527</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1574278805527</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -476,7 +486,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Shifted focus to OpenGL development and away from Vpython due to limitations. Hope this is a good idea!" />
     <MESSAGE value="Everything is a complete mess why did I do this to myself" />
     <MESSAGE value="Added translation and modification of bounding boxes with keyboard controls. (see pygame inputs at bottom for instruction)" />
     <MESSAGE value="Improved controls with macro and fine adjustment. Began work on rotation (still suspect, I likely messed up the trig). Added ability to delete bounding boxes (which throws an out of bounds exception in common cases, needs work)." />
@@ -501,7 +510,8 @@
     <MESSAGE value="Simplified a lot of render code and made all saved values Kitti compliant. Outputs to a Kitti-formatted file." />
     <MESSAGE value="Bug fixes." />
     <MESSAGE value="Updated camera positioning to reflect kitti handedness and axis orientation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated camera positioning to reflect kitti handedness and axis orientation." />
+    <MESSAGE value="Small fixes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Small fixes." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -514,6 +524,6 @@
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_simple_old.coverage" NAME="opengl_pygame_simple_old Coverage Results" MODIFIED="1572454190467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1574273049566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1574444494416" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
   </component>
 </project>

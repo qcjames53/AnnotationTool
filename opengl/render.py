@@ -49,10 +49,10 @@ def draw(boxes, box_types, frame_number, number_of_frames):
             draw_2d_text((RENDER_SIZE[0] / 2 - (len(temp_string) * 4), RENDER_SIZE[1] / 2 - 4), temp_string,
                          bg_color=(0.8, 0, 0))
         elif len(boxes) == 0:
-            draw_2d_text((2, 29), "[BOX ADJUST MODE]")
+            draw_2d_text((2, 29), "[BOX MODE]")
             draw_2d_text((2, 15), "Mode[ALT]  Hide[SHIFT]  New[ENTER]")
         else:
-            draw_2d_text((2, 29), "[BOX ADJUST MODE]  Selected: " + boxes[selected_box].to_string_rounded())
+            draw_2d_text((2, 29), "[BOX MODE]  " + boxes[selected_box].to_string_rounded())
             draw_2d_text((2, 15),
                          "Mode[ALT]  Hide[SHIFT]  New[ENTER]  Select[Z,X]  Delete[DEL/BACKSP]              ")
             draw_2d_text((2, 2),
@@ -438,7 +438,7 @@ BOX_EDGE_RENDER_ORDER = ((0, 1), (0, 3), (0, 4), (2, 1), (2, 3), (2, 7), (6, 3),
 BOX_MOD_DIMENSION_AMOUNT = 0.1
 BOX_ROTATION_AMOUNT = math.radians(1)
 BOX_TRANSLATION_AMOUNT = 0.1
-CAMERA_MOD_FOV_AMOUNT = 1
+CAMERA_MOD_FOV_AMOUNT = 0.1
 CAMERA_ROTATION_AMOUNT = 0.1
 CAMERA_TRANSLATION_AMOUNT = 0.05
 CTRL_MULTI = 10
@@ -448,7 +448,8 @@ TEXT_BORDER = 2
 # Global Variables for PyGame & Data Storage
 box_blink_frame = 0
 box_blink_state = False
-camera = Camera([0.0, -0.55, -21.7], [204.8, 1.4], 35, 0.1, 200) # Camera object to store camera variables
+#camera = Camera([0.0, -0.55, -45.55], [192.5, 0.6], 16.6, 0.1, 200) # Camera object to store camera variables
+camera = Camera([0.0, -0.55, -43.55], [192.5, 0.6], 16.6, 0.1, 200) # Camera object to store camera variables
 frame_select_number = 0
 in_camera_mode = False # True if user is adjusting camera
 in_frame_mode = False # True if user is selecting a frame
