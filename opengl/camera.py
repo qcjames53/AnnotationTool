@@ -25,3 +25,6 @@ class Camera:
         self.pos = self.pos_init.copy()
         self.rot = self.rot_init.copy()
         self.fov = self.fov_init
+
+    def get_pos_copy(self):
+        return self.pos.copy()

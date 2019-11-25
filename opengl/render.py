@@ -11,7 +11,6 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GL.shaders import *
 from OpenGL.GLUT import *
-from PIL import Image
 
 from camera import *
 
@@ -163,16 +162,17 @@ def draw_background_image():
 
 
 def draw_bounding_box(box, index, selected=False):
-    glBegin(GL_LINES)
-    if selected:
-        glColor3fv((1, 1, 1))
-    else:
-        glColor3fv(box.color_value)
-    for edge in BOX_EDGE_RENDER_ORDER:
-        for vertex in edge:
-            glVertex3fv(box.vertices[vertex])
-    glEnd()
-    draw_3d_text(box.location, box.type + str(index))
+    if box.truncated == 0:
+        glBegin(GL_LINES)
+        if selected:
+            glColor3fv((1, 1, 1))
+        else:
+            glColor3fv(box.color_value)
+        for edge in BOX_EDGE_RENDER_ORDER:
+            for vertex in edge:
+                glVertex3fv(box.vertices[vertex])
+        glEnd()
+        draw_3d_text(box.location, box.type + str(index))
 
 
 def draw_ground_plane_grid(lines, distance_between_lines):
@@ -315,7 +315,7 @@ def input_handler(event, boxes, box_types):
             show_instructions = True
         elif len(boxes) == 0:  # Program will crash if any below values called with 0 index and no boxes
             None
-        elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE) and len(boxes) > 0:
+        elif (event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE):
             boxes.pop(selected_box)
             selected_box = min(selected_box, len(boxes) - 1)  # clamp selected_box to usable range
             box_blink_frame = 0
@@ -423,6 +423,10 @@ def render_screen(boxes, box_types, frame, number_of_frames):
     if box_blink_frame >= BOX_BLINK_SPEED:
         box_blink_state = not box_blink_state
         box_blink_frame = 0
+
+    # Update alpha of selected box
+    if selected_box < len(boxes) and selected_box >= 0:
+        boxes[selected_box].build_alpha(camera.get_pos_copy())
 
     # Draw screen at 30 fps
     if output == "":

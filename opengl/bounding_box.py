@@ -3,7 +3,30 @@ import math
 # Bounding Box Object Class
 class BoundingBox():
     """
-    A class to represent a 3D box placed along the ground plane at a height of 0
+    A class to represent a 3D box placed along the ground plane at a height of 0.
+
+    The following is stolen directly from the Kitti data set:
+     Values    Name      Description
+    ----------------------------------------------------------------------------
+       1    type         Describes the type of object: 'Car', 'Van', 'Truck',
+                         'Pedestrian', 'Person_sitting', 'Cyclist', 'Tram',
+                         'Misc' or 'DontCare'
+       1    truncated    Float from 0 (non-truncated) to 1 (truncated), where
+                         truncated refers to the object leaving image boundaries
+       1    occluded     Integer (0,1,2,3) indicating occlusion state:
+                         0 = fully visible, 1 = partly occluded
+                         2 = largely occluded, 3 = unknown
+       1    alpha        Observation angle of object, ranging [-pi..pi]
+       4    bbox         2D bounding box of object in the image (0-based index):
+                         contains left, top, right, bottom pixel coordinates
+                            #### Note: bounding_box.py will not make use of this,
+                            #### type, as we'e dealing with 3D.
+       3    dimensions   3D object dimensions: height, width, length (in meters)
+       3    location     3D object location x,y,z in camera coordinates (in meters)
+       1    rotation_y   Rotation ry around Y-axis in camera coordinates [-pi..pi]
+       1    score        Only for results: Float, indicating confidence in
+                         detection, needed for p/r curves, higher is better.
+
     """
     def __init__(self, type, truncated, occluded, alpha, bbox, dimensions, location, rotation_y, color_value):
         self.type = type
@@ -92,6 +115,21 @@ class BoundingBox():
 
         self.vertices = (v0, v1, v2, v3, v4, v5, v6, v7, v8, v9)
 
+    def build_alpha(self, cam_location):
+        delta_x = self.location[0] - cam_location[0]
+        delta_z = self.location[2] - cam_location[2]
+
+        r1 = (self.rotation_y) % (2 * math.pi)
+        r2 = (math.atan2(delta_z, delta_x) - (1.5 * math.pi)) % (2 * math.pi)
+
+        self.alpha = (r1 - r2) % (2 * math.pi)
+
+    def set_truncation(self, truncation):
+        self.truncated = truncation
+
+    def set_occlusion(self, occlusion):
+        self.occluded = occlusion
+
     def set_location(self,location):
         self.location[0] = location[0]
         self.location[1] = location[1]
@@ -113,6 +151,7 @@ class BoundingBox():
                              self.dimensions[2] + distances[2]))
 
     def set_rotation_y(self, rotation_y):
+        rotation_y %= (2 * math.pi)
         self.rotation_y = rotation_y
         self.build_vertices()
 
