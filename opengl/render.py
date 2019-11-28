@@ -189,7 +189,7 @@ def draw_ground_plane_grid(lines, distance_between_lines):
     glEnd()
 
 
-def input_handler(event, boxes, box_types):
+def input_handler(event, boxes, box_types, click_box = -1):
     global box_blink_frame
     global box_blink_state
     global frame_select_number
@@ -198,6 +198,12 @@ def input_handler(event, boxes, box_types):
     global in_place_mode
     global selected_box
     global show_instructions
+
+    if click_box != -1:
+        selected_box = click_box
+        box_blink_frame = 0
+        box_blink_state = True
+        return ""
 
     ##### GLOBAL KEYS (Never Disabled) #####
     # File output of data
@@ -375,6 +381,8 @@ def input_handler(event, boxes, box_types):
         # Print selected box
         elif event.key == pygame.K_p:
             print(boxes[selected_box].to_string())
+
+
     return ""
 
 
@@ -417,6 +425,19 @@ def render_screen(boxes, box_types, frame, number_of_frames):
 
         if event.type == pygame.KEYDOWN:
             output = input_handler(event, boxes, box_types)
+
+        if pygame.mouse.get_pressed()[0] == 1 and len(boxes) > 0:
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_x = mouse_pos[0]
+            mouse_y = mouse_pos[1]
+            for index, box in enumerate(boxes):
+                loc_x = box.location[0]
+                loc_z = box.location[2]
+                pixel_x = 360 + ((loc_x/0.1)*5)
+                pixel_y = 240 - ((loc_z / 0.1) * 2)
+                if pixel_x + 50 >= mouse_x and pixel_x - 50 <= mouse_x and pixel_y + 100 >= mouse_y and pixel_y - 100 <= mouse_y:
+                    output = input_handler(event, boxes, box_types, index)
+
 
     # Increment box blinks
     box_blink_frame += 1
