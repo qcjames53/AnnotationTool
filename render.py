@@ -15,6 +15,17 @@ from OpenGL.GLUT import *
 from camera import *
 
 
+def get_2D_point(point_3d, viewMatrix, projectionMatrix, width, height):
+    view_projection_matrix = projectionMatrix * viewMatrix
+    point_matrix = numpy.array([point_3d[0], point_3d[1], point_3d[2], 0])
+    point = view_projection_matrix * point_matrix
+
+    # TODO - Get help with above point, outputs are nowhere near close to accurate
+    win_x = math.floor(((point[0][0] + 1) / 2.0) * width)
+    win_y = math.floor(((point[2][2]) / 2.0) * height)
+    return [win_x, win_y]
+
+
 def draw(boxes, box_types, frame_number, number_of_frames):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     draw_background_image()
@@ -381,6 +392,10 @@ def input_handler(event, boxes, box_types, click_box=-1):
         # Print selected box
         elif event.key == pygame.K_p:
             print(boxes[selected_box].to_string())
+
+            viewmatrix = glGetFloatv(GL_MODELVIEW_MATRIX)
+            projectionmatrix = glGetFloatv(GL_PROJECTION_MATRIX)
+            print("2D point of center: " + str(get_2D_point(boxes[selected_box].location, viewmatrix, projectionmatrix, RENDER_SIZE[0], RENDER_SIZE[1])))
 
     # Catch-all return for function
     return ""

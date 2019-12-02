@@ -8,7 +8,7 @@ from render import *
 BOX_TYPES = (("Car", (1.7, 2.0, 5.0), (1, 0, 0)),  # (name, dimensions(h,w,l), color_value)
              ("Cyclist", (1.8,0.5,2.0), (0,1,0)),
              ("Pedestrian", (1.7,0.5,0.5), (0,0,1)))
-INPUT_FILE_NAME = "images/img*.jpg" 
+INPUT_FILE_NAME = "images/img*.jpg"
 NUMBER_OF_FRAMES = 1500
 OUTPUT_FILE_NAME = "output.txt"
 
