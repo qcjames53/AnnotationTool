@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/required_whl/PyOpenGL-3.1.4-cp36-cp36m-win_amd64.whl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/required_whl/PyOpenGL_accelerate-3.1.4-cp36-cp36m-win_amd64.whl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +34,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/opengl_pygame.py" />
   </component>
   <component name="RecentsManager">
@@ -64,8 +59,30 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="AnnotationTool" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/opengl" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="opengl_pygame" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="AnnotationTool" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -78,7 +95,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl_pygame.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -87,9 +104,86 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="opengl_pygame_simple" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="AnnotationTool" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_pygame_simple.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="opengl_pygame_simple_old" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="AnnotationTool" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_pygame_simple_old.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="opengl_pygame_text_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="AnnotationTool" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/opengl_pygame_text_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.opengl_pygame" />
+      <item itemvalue="Python.opengl_pygame_text_test" />
+      <item itemvalue="Python.opengl_pygame_simple" />
+      <item itemvalue="Python.opengl_pygame_simple_old" />
+      <item itemvalue="Python.main" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.opengl_pygame" />
+        <item itemvalue="Python.opengl_pygame_simple" />
+        <item itemvalue="Python.opengl_pygame_simple_old" />
+        <item itemvalue="Python.opengl_pygame_text_test" />
       </list>
     </recent_temporary>
   </component>
@@ -134,17 +228,6 @@
       <workItem from="1572621394804" duration="10002000" />
       <workItem from="1572888911421" duration="8101000" />
       <workItem from="1573067531763" duration="3595000" />
-      <workItem from="1573229041434" duration="10078000" />
-      <workItem from="1573495057287" duration="1016000" />
-      <workItem from="1573837646555" duration="3052000" />
-      <workItem from="1573845111668" duration="18000" />
-      <workItem from="1574099070283" duration="7693000" />
-      <workItem from="1574270766271" duration="3513000" />
-      <workItem from="1574443231159" duration="4716000" />
-      <workItem from="1574707079444" duration="33000" />
-      <workItem from="1574707149113" duration="5327000" />
-      <workItem from="1575247315726" duration="1752000" />
-      <workItem from="1575308591611" duration="1846000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -300,105 +383,7 @@
       <option name="project" value="LOCAL" />
       <updated>1573071120723</updated>
     </task>
-    <task id="LOCAL-00023" summary="Wumbo commit with about a gig of image data. Added ability to switch displayed frame and cleaned up some of the UI.">
-      <created>1573237378509</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1573237378512</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Minor UI changes.">
-      <created>1573238453924</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1573238453924</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Documentation additions and refactoring.">
-      <created>1573239196683</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1573239196683</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Added file outputs for future Pytorch data collection. Pressing 'O' will output all frames to given file.">
-      <created>1573843794605</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1573843794605</updated>
-    </task>
-    <task id="LOCAL-00027" summary="GUI changes for file output.">
-      <created>1573844949114</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1573844949114</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Post-meeting changes.">
-      <created>1574102164456</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1574102164456</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Simplified a lot of render code and made all saved values Kitti compliant. Outputs to a Kitti-formatted file.">
-      <created>1574107508017</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1574107508017</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Bug fixes.">
-      <created>1574271276859</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1574271276859</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Updated camera positioning to reflect kitti handedness and axis orientation.">
-      <created>1574274628420</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1574274628420</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Small fixes.">
-      <created>1574278805527</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1574278805527</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Major adjustments to camera profile. I believe this is a much more accurate picture than before.">
-      <created>1574452221787</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1574452221787</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Implemented alpha function. Small changes in camera and render files to accommodate this. Truncated boxes will no longer be rendered.">
-      <created>1574713382549</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1574713382549</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Reorganized files so old test code is in subdirectory 'old-code' and modern OpenGL code is in parent directory. May require manual merging soon.">
-      <created>1575247578266</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1575247578266</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Small readability changes.">
-      <created>1575248623422</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1575248623422</updated>
-    </task>
-    <option name="localTasksCounter" value="37" />
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -419,6 +404,16 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Added experimental GNU GPL Tinker 3D Library" />
+    <MESSAGE value="End of day changes 2019-09-23" />
+    <MESSAGE value="Added proper background image support, rotation, calibration, and a little UI" />
+    <MESSAGE value="Began work on mouse support. Not complete, but in the works. Fixed rotation." />
+    <MESSAGE value="Garrick meeting changes. Added ability to change size of Boxes" />
+    <MESSAGE value="Shifted focus to OpenGL development and away from Vpython due to limitations. Hope this is a good idea!" />
+    <MESSAGE value="Everything is a complete mess why did I do this to myself" />
+    <MESSAGE value="Added translation and modification of bounding boxes with keyboard controls. (see pygame inputs at bottom for instruction)" />
+    <MESSAGE value="Improved controls with macro and fine adjustment. Began work on rotation (still suspect, I likely messed up the trig). Added ability to delete bounding boxes (which throws an out of bounds exception in common cases, needs work)." />
+    <MESSAGE value="Fixed rotation. Improved visualization and blink timing when swithcing boxes. Fixed obscure oob errors. Began work on image shaders." />
     <MESSAGE value="Added background image cobbled together with sample code and prayers. It works. I think I sacrificed my soul in the process." />
     <MESSAGE value="Added text display using GLUT for Bounding Box labels.&#10;&#10;There were some issues with the Python default GLUT install, so you may have to install some .wpl files from this website (at least that fixed it for me). https://python-catalin.blogspot.com/2018/08/pyopengl-fix-attempt-to-call-undefined.html" />
     <MESSAGE value="GLUT changes and ALT changes." />
@@ -430,21 +425,7 @@
     <MESSAGE value="Merging" />
     <MESSAGE value="Split opengl_pygame into several classes and generally cleaned up the code." />
     <MESSAGE value="Split main into render(visualisation) and main(data). Allowed for background image to be updated. Allowed for arbitrary numbers of objects." />
-    <MESSAGE value="Wumbo commit with about a gig of image data. Added ability to switch displayed frame and cleaned up some of the UI." />
-    <MESSAGE value="Minor UI changes." />
-    <MESSAGE value="Documentation additions and refactoring." />
-    <MESSAGE value="Added file outputs for future Pytorch data collection. Pressing 'O' will output all frames to given file." />
-    <MESSAGE value="GUI changes for file output." />
-    <MESSAGE value="Post-meeting changes." />
-    <MESSAGE value="Simplified a lot of render code and made all saved values Kitti compliant. Outputs to a Kitti-formatted file." />
-    <MESSAGE value="Bug fixes." />
-    <MESSAGE value="Updated camera positioning to reflect kitti handedness and axis orientation." />
-    <MESSAGE value="Small fixes." />
-    <MESSAGE value="Major adjustments to camera profile. I believe this is a much more accurate picture than before." />
-    <MESSAGE value="Implemented alpha function. Small changes in camera and render files to accommodate this. Truncated boxes will no longer be rendered." />
-    <MESSAGE value="Reorganized files so old test code is in subdirectory 'old-code' and modern OpenGL code is in parent directory. May require manual merging soon." />
-    <MESSAGE value="Small readability changes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Small readability changes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Split main into render(visualisation) and main(data). Allowed for background image to be updated. Allowed for arbitrary numbers of objects." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -457,6 +438,6 @@
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_simple_old.coverage" NAME="opengl_pygame_simple_old Coverage Results" MODIFIED="1572454190467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1575310548944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1573071019897" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/opengl" />
   </component>
 </project>
