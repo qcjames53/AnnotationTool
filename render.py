@@ -189,7 +189,7 @@ def draw_ground_plane_grid(lines, distance_between_lines):
     glEnd()
 
 
-def input_handler(event, boxes, box_types, click_box = -1):
+def input_handler(event, boxes, box_types, click_box=-1):
     global box_blink_frame
     global box_blink_state
     global frame_select_number
@@ -382,7 +382,7 @@ def input_handler(event, boxes, box_types, click_box = -1):
         elif event.key == pygame.K_p:
             print(boxes[selected_box].to_string())
 
-
+    # Catch-all return for function
     return ""
 
 
@@ -438,7 +438,6 @@ def render_screen(boxes, box_types, frame, number_of_frames):
                 if pixel_x + 50 >= mouse_x and pixel_x - 50 <= mouse_x and pixel_y + 100 >= mouse_y and pixel_y - 100 <= mouse_y:
                     output = input_handler(event, boxes, box_types, index)
 
-
     # Increment box blinks
     box_blink_frame += 1
     if box_blink_frame >= BOX_BLINK_SPEED:
@@ -446,7 +445,7 @@ def render_screen(boxes, box_types, frame, number_of_frames):
         box_blink_frame = 0
 
     # Update alpha of selected box
-    if selected_box < len(boxes) and selected_box >= 0:
+    if len(boxes) > selected_box >= 0:
         boxes[selected_box].build_alpha(camera.get_pos_copy())
 
     # Draw screen at 30 fps
@@ -473,14 +472,13 @@ TEXT_BORDER = 2
 # Global Variables for PyGame & Data Storage
 box_blink_frame = 0
 box_blink_state = False
-#camera = Camera([0.0, -0.55, -45.55], [192.5, 0.6], 16.6, 0.1, 200) # Camera object to store camera variables
-camera = Camera([0.0, -0.55, -43.55], [192.5, 0.6], 16.6, 0.1, 200) # Camera object to store camera variables
+camera = Camera([0.0, -0.55, -43.55], [192.5, 0.6], 16.6, 0.1, 200)  # Camera object to store camera variables
 frame_select_number = 0
-in_camera_mode = False # True if user is adjusting camera
-in_frame_mode = False # True if user is selecting a frame
-in_place_mode = False # True if user is placing box
-selected_box = 0 # Index of selected box in boxes array
-show_instructions = True # True if instructions are visible of screen
+in_camera_mode = False  # True if user is adjusting camera
+in_frame_mode = False  # True if user is selecting a frame
+in_place_mode = False  # True if user is placing box
+selected_box = 0  # Index of selected box in boxes array
+show_instructions = True  # True if instructions are visible of screen
 
 # Initialize PyGame Display Window & OpenGL
 pygame.init()

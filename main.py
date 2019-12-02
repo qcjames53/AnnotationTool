@@ -22,11 +22,11 @@ def instantiate_box(type, dimensions, location, rotation_y, color_value):
 def setup_frames(number_of_frames, naming_convention):
     print("Loading " + str(number_of_frames) + " images of type " + naming_convention)
     for i in range(1,number_of_frames+1):
-        index = str(i)
-        while len(index) < 6:  # Padding
-            index = "0" + index
-        PIL_image = Image.open(naming_convention.replace("*",index))
-        frames.append(PIL_image)
+        f_index = str(i)
+        while len(f_index) < 6:  # Padding
+            f_index = "0" + f_index
+        pil_image = Image.open(naming_convention.replace("*",f_index))
+        frames.append(pil_image)
     print ("Loading complete")
 
 
