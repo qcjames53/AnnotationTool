@@ -17,13 +17,13 @@ from camera import *
 
 def get_2D_point(point_3d, viewMatrix, projectionMatrix, width, height):
     view_projection_matrix = projectionMatrix * viewMatrix
-    point_matrix = numpy.array([point_3d[0], point_3d[1], point_3d[2], 0])
+    point_matrix = numpy.array([point_3d[0], point_3d[1], point_3d[2], 1])
     point = view_projection_matrix * point_matrix
-
-    # TODO - Get help with above point, outputs are nowhere near close to accurate
-    win_x = math.floor(((point[0][0] + 1) / 2.0) * width)
-    win_y = math.floor(((point[2][2]) / 2.0) * height)
-    return [win_x, win_y]
+    return point
+    # # TODO - Get help with above point, outputs are nowhere near close to accurate
+    # win_x = math.floor(((point[0][0] + 1) / 2.0) * width)
+    # win_y = math.floor(((point[2][2]) / 2.0) * height)
+    # return [win_x, win_y]
 
 
 def draw(boxes, box_types, frame_number, number_of_frames):
