@@ -15,15 +15,12 @@ from OpenGL.GLUT import *
 from camera import *
 
 
-def get_2D_point(point_3d, viewMatrix, projectionMatrix, width, height):
-    view_projection_matrix = projectionMatrix * viewMatrix
-    point_matrix = numpy.array([point_3d[0], point_3d[1], point_3d[2], 1])
-    point = view_projection_matrix * point_matrix
+def get_2D_point(point_3d, width, height):
+    point_vector = numpy.array([point_3d[0], point_3d[1], point_3d[2], 1])
+    print(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX)).T)
+    point = numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX)).T.dot(point_vector)
+    # point[0:2] /= point[2]
     return point
-    # # TODO - Get help with above point, outputs are nowhere near close to accurate
-    # win_x = math.floor(((point[0][0] + 1) / 2.0) * width)
-    # win_y = math.floor(((point[2][2]) / 2.0) * height)
-    # return [win_x, win_y]
 
 
 def draw(boxes, box_types, frame_number, number_of_frames):
@@ -391,11 +388,8 @@ def input_handler(event, boxes, box_types, click_box=-1):
                 -BOX_ROTATION_AMOUNT * (CTRL_MULTI if pygame.key.get_mods() & pygame.KMOD_CTRL else 1))
         # Print selected box
         elif event.key == pygame.K_p:
-            print(boxes[selected_box].to_string())
-
-            viewmatrix = glGetFloatv(GL_MODELVIEW_MATRIX)
-            projectionmatrix = glGetFloatv(GL_PROJECTION_MATRIX)
-            print("2D point of center: " + str(get_2D_point(boxes[selected_box].location, viewmatrix, projectionmatrix, RENDER_SIZE[0], RENDER_SIZE[1])))
+            #print(boxes[selected_box].to_string())
+            print("2D point of center: " + str(get_2D_point(boxes[selected_box].location, RENDER_SIZE[0], RENDER_SIZE[1])))
 
     # Catch-all return for function
     return ""
@@ -418,10 +412,15 @@ def set_background_image(backgroundImage):
 
 
 def set_camera():
+    numpy.set_printoptions(suppress=True)
+
     glLoadIdentity()
+    print(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX)).T)
     gluPerspective(camera.fov, (RENDER_SIZE[0] / RENDER_SIZE[1]), camera.ncp,
                    camera.fcp)  # (FOV, Aspect Ratio, Near Clipping Plane, Far Clipping Plane)
+    print(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX)).T)
     glTranslatef(camera.pos[0], camera.pos[1], camera.pos[2])  # move camera
+    print(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX)).T)
     glRotatef(camera.rot[0], 1, 0, 0)  # rotation of camera (angle, x, y, z)
     glRotatef(camera.rot[1], 0, 1, 0)
 
