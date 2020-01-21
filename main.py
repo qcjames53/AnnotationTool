@@ -1,6 +1,11 @@
-import pygame
 import numpy as np
+import pygame
+import sys
 
+def draw_axis():
+    draw_line((0, 0, 0), (1, 0, 0), (255, 0, 0))
+    draw_line((0, 0, 0), (0, 1, 0), (0, 255, 0))
+    draw_line((0, 0, 0), (0, 0, 1), (0, 0, 255))
 
 def draw_grid(line_count, distance_between):
     distance = line_count * distance_between
@@ -21,7 +26,7 @@ def draw_line_screen(px1, px2, color):
 
 
 def get_screen_point(point_3d):
-    point_as_matrix = np.array([point_3d[0], point_3d[1], point_3d[2], 1])
+    point_as_matrix = np.array([point_3d[0] + ORIGIN[0], point_3d[1] + ORIGIN[1], point_3d[2] + ORIGIN[2], 1])
     point = CAMERA_MATRIX.dot(point_as_matrix)
     point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])
     return (point_scaled[0],point_scaled[1])
@@ -30,14 +35,16 @@ def get_screen_point(point_3d):
 def render_screen():
     render.fill([0,0,0])
     draw_grid(10,1)
+    draw_axis()
 
 
-CAMERA_MATRIX = np.array([[1,0,0,0],
-                          [0,1,0,0],
-                          [0,0,1/3,-2/3],
-                          [0,0,-1/3,1]])
-GRID_COLOR = (0, 0, 255)
-LINE_WIDTH = 3
+CAMERA_MATRIX = np.array([[721.5377    ,   0.        , 609.5593    ,  44.85728   ],
+                          [  0.        , 721.5377    , 172.854     ,   0.2163791 ],
+                          [  0.        ,   0.        ,   1.        ,   0.00274588],
+                          [  0.        ,   0.        ,   0.        ,   1.        ]])
+GRID_COLOR = (80, 80, 80)
+LINE_WIDTH = 1
+ORIGIN = (0,-3,-13)
 RENDER_SIZE = (720, 480)
 
 pygame.init()
@@ -49,6 +56,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            sys.exit()
 
     # Input handler
     render_screen()
