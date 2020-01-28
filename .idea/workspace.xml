@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/bounding_box.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/button.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/ubuntu_mono.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/required_whl/PyOpenGL-3.1.4-cp36-cp36m-win_amd64.whl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/required_whl/PyOpenGL_accelerate-3.1.4-cp36-cp36m-win_amd64.whl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/required_whl/Shapely-1.6.4.post2-cp36-cp36m-win_amd64.whl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/misc/visualize_gts.py" beforeDir="false" afterPath="$PROJECT_DIR$/.old_reference/scripts/misc/visualize_gts.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +37,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/opengl" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -41,11 +48,12 @@
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/opengl_pygame.py" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl" />
-      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\.old_reference" />
+      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool" />
+      <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool" />
       <recent name="C:\Users\ADMIN\OneDrive - DM-CA\Libraries\Repos\AnnotationTool\opengl" />
     </key>
@@ -172,7 +180,10 @@
       <workItem from="1575653084293" duration="1422000" />
       <workItem from="1579028895778" duration="4623000" />
       <workItem from="1579205374639" duration="6350000" />
-      <workItem from="1579641110306" duration="4542000" />
+      <workItem from="1579641110306" duration="5182000" />
+      <workItem from="1580236560274" duration="10788000" />
+      <workItem from="1580248717433" duration="85000" />
+      <workItem from="1580249174408" duration="5895000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -447,7 +458,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579212002369</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="New camera matrix (taken from old working code). Valid rendering, so pressing forward with further methods.">
+      <created>1579646868096</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1579646868096</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,7 +486,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Added simplified Pygame OpenGL code." />
     <MESSAGE value="Mid-day opengl pushes for James debugging." />
     <MESSAGE value="Added camera controls and calibrated grid for 1 meter units." />
     <MESSAGE value="Added instructions, default sizes, and types. The code is still very messy, but we will work on splitting it soon." />
@@ -493,7 +510,8 @@
     <MESSAGE value="Added get 2d point function." />
     <MESSAGE value="Added Garrick's files and shifted around some things. No major code changes yet, still trying to figure out what's going on with the OpenCV code." />
     <MESSAGE value="New render system. I believe the math is correct in these cases, just trying to find a valid camera matrix at this point." />
-    <option name="LAST_COMMIT_MESSAGE" value="New render system. I believe the math is correct in these cases, just trying to find a valid camera matrix at this point." />
+    <MESSAGE value="New camera matrix (taken from old working code). Valid rendering, so pressing forward with further methods." />
+    <option name="LAST_COMMIT_MESSAGE" value="New camera matrix (taken from old working code). Valid rendering, so pressing forward with further methods." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -506,7 +524,7 @@
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_simple_old.coverage" NAME="opengl_pygame_simple_old Coverage Results" MODIFIED="1572454190467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1579646719087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1580255667150" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$visualize_gts.coverage" NAME="visualize_gts Coverage Results" MODIFIED="1575654571032" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/misc" />
   </component>
 </project>
