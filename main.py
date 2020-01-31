@@ -10,11 +10,19 @@ pygame.init()
 
 def build_controls():
     global buttons
+    global input_state
     buttons = []
     current_x = 4
     current_y = RENDER_SIZE[1] - 72
-    r_text = [["Select Frame","+","-","|","New Car","New Pedestrian","New Cyclist","|","Select Box","+","-"],
-              ["x+","x-","z+","z-","r+","r-","l+","l-","w+","w-","h+","h-"]]
+    if input_state == 0:
+        r_text = [
+            ["Mode", "|", "Select Frame", "+", "-", "|", "New Car", "New Pedestrian", "New Cyclist", "|", "Select Box",
+             "+", "-"]]
+    else:
+        r_text = [
+            ["Mode", "|", "Select Frame", "+", "-", "|", "New Car", "New Pedestrian", "New Cyclist", "|", "Select Box",
+             "+", "-"],
+            ["x+", "x-", "z+", "z-", "|", "r+", "r-", "|", "l+", "l-", "w+", "w-", "h+", "h-", "|", "Delete Box"]]
     for row in r_text:
         for text in row:
             if text == "|":
@@ -26,27 +34,58 @@ def build_controls():
         current_x = 4
         current_y += 24
     global message_text
-    message_text = "Setup complete"
 
 
 def button_handler(index):
     global background_image_index
-    global message_text
+    global blink_animation_frame
     global input_state
-    if index == 0:  # Input Frame Number
+    global message_text
+    global selected_box
+    global selected_box_input
+    if index == 0: # Toggle mode
+        if input_state == 0:
+            input_state = 1
+            message_text = "Set to box adjust mode"
+        else:
+            input_state = 0
+            message_text = "Set to camera adjust mode"
+        build_controls()
+    elif index == 1:  # Input Frame Number
         input_state = 2
-    elif index == 1:  # + Frame
+    elif index == 2:  # + Frame
         background_image_index += 1
         if background_image_index > background_image_index_max:
             background_image_index = background_image_index_max
         set_background_image()
         message_text = "Set frame to " + str(background_image_index)
-    elif index == 2:  # - Frame
+    elif index == 3:  # - Frame
         background_image_index -= 1
         if background_image_index < background_image_index_min:
             background_image_index = background_image_index_min
         set_background_image()
         message_text = "Set frame to " + str(background_image_index)
+    elif index == 4:  # Instantiate Car
+        instantiate_box(0)
+    elif index == 5:  # Instantiate Pedestrian
+        instantiate_box(1)
+    elif index == 6:  # Instantiate Cyclist
+        instantiate_box(2)
+    elif index == 7:  # Input Box Number
+        selected_box_input = selected_box
+        input_state = 3
+    elif index == 8:  # Box number ++
+        selected_box += 1
+        if selected_box >= len(boxes):
+            selected_box = len(boxes) - 1
+        blink_animation_frame = 0
+        message_text = "Selected box " + str(selected_box)
+    elif index == 9:  # Box Number --
+        selected_box -= 1
+        if selected_box < 0:
+            selected_box = 0
+        blink_animation_frame = 0
+        message_text = "Selected box " + str(selected_box)
 
 
 
@@ -60,7 +99,7 @@ def draw_bounding_boxes(IgnoreCulling = False):
     for i in range(0,len(boxes)):
         if IgnoreCulling or boxes[i].truncated == 0:
             color = boxes[i].color_value
-            if i == selected_box and blink_animation_frame > blink_animation_time:
+            if i == selected_box and blink_animation_frame < blink_animation_time:
                 color = C_WHITE
             for edge in BOX_EDGE_RENDER_ORDER:
                 draw_line(boxes[i].vertices[edge[0]],boxes[i].vertices[edge[1]],color)
@@ -85,25 +124,22 @@ def draw_controls():
 
     # Rows 2 - 4
     for index in range(0,len(buttons)):
-        draw_control_button(index)
-
-def draw_control_button(index):
-    pos = buttons[index].get_ul()
-    len = buttons[index].get_len()
-    text = buttons[index].get_text()
-    pygame.draw.rect(render, C_BLACK, (pos, (len, 24)))
-    if buttons[index].get_triggered():
-        pygame.draw.rect(render, C_HIGHLIGHT, ((pos[0], pos[1]), (len - 1, 23)))
-        pygame.draw.rect(render, C_BACKGROUND, ((pos[0] + 1, pos[1] + 1), (len - 3, 20)))
-        pygame.draw.rect(render, C_SHADOW, ((pos[0] + 2, pos[1] + 2), (len - 4, 19)))
-        if mouse_pressed == False:
-            buttons[index].remove_trigger()
-    else:
-        pygame.draw.rect(render, C_SHADOW, ((pos[0],pos[1]), (len - 1, 23)))
-        pygame.draw.rect(render, C_HIGHLIGHT, ((pos[0] + 1, pos[1] + 1), (len - 3, 20)))
-        pygame.draw.rect(render, C_BACKGROUND, ((pos[0] + 2, pos[1] + 2), (len - 4, 19)))
-    message = CONTROL_FONT.render(text, True, C_BLACK)
-    render.blit(message, (pos[0] + 6, pos[1] + 2))
+        pos = buttons[index].get_ul()
+        pixel_length = buttons[index].get_len()
+        text = buttons[index].get_text()
+        pygame.draw.rect(render, C_BLACK, (pos, (pixel_length, 24)))
+        if buttons[index].get_triggered():
+            pygame.draw.rect(render, C_HIGHLIGHT, ((pos[0], pos[1]), (pixel_length - 1, 23)))
+            pygame.draw.rect(render, C_BACKGROUND, ((pos[0] + 1, pos[1] + 1), (pixel_length - 3, 20)))
+            pygame.draw.rect(render, C_SHADOW, ((pos[0] + 2, pos[1] + 2), (pixel_length - 4, 19)))
+            if not mouse_pressed:
+                buttons[index].remove_trigger()
+        else:
+            pygame.draw.rect(render, C_SHADOW, ((pos[0], pos[1]), (pixel_length - 1, 23)))
+            pygame.draw.rect(render, C_HIGHLIGHT, ((pos[0] + 1, pos[1] + 1), (pixel_length - 3, 20)))
+            pygame.draw.rect(render, C_BACKGROUND, ((pos[0] + 2, pos[1] + 2), (pixel_length - 4, 19)))
+        message = CONTROL_FONT.render(text, True, C_BLACK)
+        render.blit(message, (pos[0] + 6, pos[1] + 2))
 
 
 # Draws a grid to the boundaries of the culling area every 1 unit
@@ -127,84 +163,133 @@ def draw_line_screen(px1, px2, color):
 
 
 def get_ground_point(point_2d):
+    # TODO - Fancy reverse camera matrix math and shit
     None
 
 
 def get_screen_point(point_3d):
-    point_as_matrix = np.array([point_3d[0] + camera_pos[0], point_3d[1] + camera_pos[1], point_3d[2] + camera_pos[2], 1])
+    # TODO - Rotation Matrix here
+    point_transformed = [point_3d[0] + camera_pos[0], point_3d[1] + camera_pos[1], point_3d[2] + camera_pos[2]]
+    point_as_matrix = np.array([point_transformed[0], point_transformed[1], point_transformed[2], 1])
     point = camera_matrix.dot(point_as_matrix)
     point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])
-    return (point_scaled[0],point_scaled[1])
+    return point_scaled[0], point_scaled[1]
 
 
 def input_handler(event):
     global background_image_index
-    global message_text
+    global blink_animation_frame
     global input_state
+    global message_text
+    global mouse_pressed
+    global selected_box
+    global selected_box_input
 
-    if input_state == 0 or input_state == 1:
+    # ### Hang input for box select number ### #
+    if input_state == 3 and event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_RETURN:
+            selected_box = min(len(boxes) - 1, max(0, selected_box_input))
+            input_state = 1
+            mouse_pressed = False
+            message_text = "Selected box " + str(selected_box)
+            build_controls()
+        elif event.key == pygame.K_BACKSPACE:
+            selected_box_input = math.floor(selected_box_input / 10)
+        elif pygame.key.name(event.key).isdigit():
+            selected_box_input = selected_box_input * 10 + int(pygame.key.name(event.key))
+
+    # ### Hang input for frame select number ### #
+    elif input_state == 2 and event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_RETURN:
+            if background_image_index < background_image_index_min:
+                background_image_index = background_image_index_min
+            elif background_image_index > background_image_index_max:
+                background_image_index = background_image_index_max
+            input_state = 1
+            mouse_pressed = False
+            set_background_image()
+            message_text = "Set frame to " + str(background_image_index)
+        elif event.key == pygame.K_BACKSPACE:
+            background_image_index = math.floor(background_image_index / 10)
+        elif pygame.key.name(event.key).isdigit():
+            background_image_index = background_image_index * 10 + int(pygame.key.name(event.key))
+
+    # ### Normal input routines ### #
+    else:
         if event.type == pygame.MOUSEBUTTONDOWN:
-            global mouse_pressed
-            mouse_pressed = True
-            mouse = pygame.mouse.get_pos()
-            for i in range(0, len(buttons)):
-                if buttons[i].is_triggered(mouse):
-                    button_handler(i)
+            if pygame.mouse.get_pressed()[0]:
+                mouse_pressed = True
+                mouse_pos = pygame.mouse.get_pos()
+                found_something = False
+                # Check buttons for input
+                for i in range(0, len(buttons)):
+                    if buttons[i].is_triggered(mouse_pos):
+                        button_handler(i)
+                        found_something = True
+                        break  # important to break loop, else python takes bad indexes sometimes
+
+                # Check bounding boxes for input
+                if not found_something:
+                    for i in range(0, len(boxes)):
+                        min_x = RENDER_SIZE[0]
+                        max_x = 0
+                        min_y = RENDER_SIZE[1]
+                        max_y = 0
+                        for vertex in boxes[i].vertices:
+                            screen_point = get_screen_point(vertex)
+                            min_x = min(min_x, screen_point[0])
+                            max_x = max(max_x, screen_point[0])
+                            min_y = min(min_y, screen_point[1])
+                            max_y = max(max_y, screen_point[1])
+                        if min_x <= mouse_pos[0] <= max_x and min_y <= mouse_pos[1] <= max_y:
+                            blink_animation_frame = 0
+                            found_something = True
+                            input_state = 1
+                            message_text = "Selected box " + str(selected_box)
+                            selected_box = i
+                            break  # important to break loop, else python takes bad indexes sometimes
+
+                # Select nothing
+                if not found_something:
+                    input_state = 0
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_pressed = False
 
-    if input_state == 2:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                if background_image_index < background_image_index_min:
-                    background_image_index = background_image_index_min
-                elif background_image_index > background_image_index_max:
-                    background_image_index = background_image_index_max
-                input_state = 0
-                mouse_pressed = False
-                set_background_image()
-                message_text = "Set frame to " + str(background_image_index)
-            elif event.key == pygame.K_BACKSPACE:
-                background_image_index = math.floor(background_image_index / 10)
-            elif pygame.key.name(event.key).isdigit():
-                background_image_index = background_image_index * 10 + int(pygame.key.name(event.key))
+    # ### James' mouse movement ### #
+    # TODO - Add to normal input routines above
+    # if pygame.mouse.get_pressed()[2] == 1 and len(boxes) > 0:
+    #     # move box by right click
+    #     mouse_pos = pygame.mouse.get_pos()
+    #     mouse_x = mouse_pos[0]
+    #     mouse_y = mouse_pos[1]
+    #     if mouse_x < 360:
+    #         change_x = mouse_x * 0.02
+    #         boxes[selected_box].mod_location((-change_x, 0, 0))
+    #     else:
+    #         change_x = (mouse_x - 360) * 0.02
+    #         boxes[selected_box].mod_location((change_x, 0, 0))
+    #
+    #     if mouse_y < 240:
+    #         change_y = mouse_y * 0.25
+    #         boxes[selected_box].mod_location((0, 0, change_y))
+    #     else:
+    #         change_y = (mouse_y - 240) * 0.05
+    #         boxes[selected_box].mod_location((0, 0, -change_y))
 
-
-    if pygame.mouse.get_pressed()[0] == 1 and len(boxes) > 0:
-        # mouse select box
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_x = mouse_pos[0]
-        mouse_y = mouse_pos[1]
-        print("x: ", mouse_x, " y: ", mouse_y)
-        for index, box in enumerate(boxes):
-            pixel_x, pixel_y = get_screen_point(boxes[selected_box].location)
-            if pixel_x + 100 >= mouse_x and pixel_x - 100 <= mouse_x and pixel_y + 150 >= mouse_y and pixel_y - 150 <= mouse_y:
-                # output = input_handler(event, boxes, box_types, index)
-                pass
-    if pygame.mouse.get_pressed()[2] == 1 and len(boxes) > 0:
-        # move box by right click
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_x = mouse_pos[0]
-        mouse_y = mouse_pos[1]
-        if mouse_x < 360:
-            change_x = mouse_x * 0.02
-            boxes[selected_box].mod_location((-change_x, 0, 0))
-        else:
-            change_x = (mouse_x - 360) * 0.02
-            boxes[selected_box].mod_location((change_x, 0, 0))
-
-        if mouse_y < 240:
-            change_y = mouse_y * 0.25
-            boxes[selected_box].mod_location((0, 0, change_y))
-        else:
-            change_y = (mouse_y - 240) * 0.05
-            boxes[selected_box].mod_location((0, 0, -change_y))
 
 # Adds a bounding box to the current frame based on several parameters
 def instantiate_box(index):
+    global blink_animation_frame
+    global boxes
+    global input_state
+    global message_text
+    global selected_box
     # Constructor: (type, truncated, occluded, alpha, bbox, dimensions, location, rotation_y, color_value)
     new_box = BoundingBox(BOX_TYPES[index][0], 0, 0, 0, [0,0,0,0], BOX_TYPES[index][1], (0,0,0), 0, BOX_TYPES[index][2])
+    blink_animation_frame = 0
+    input_state = 1
     selected_box = len(boxes)
+    message_text = "New " + str(BOX_TYPES[index][0]) + " created at index " + str(selected_box)
     boxes.append(new_box)
 
 
@@ -216,13 +301,13 @@ def is_not_culled(point):
 
 
 def render_screen():
-    if background_image == None:
+    if background_image is None:
         render.fill([0,0,0])
     else:
         render.blit(background_image, ((0,0),(IMAGE_SIZE[0],IMAGE_SIZE[1])))
     draw_grid()
     draw_axis()
-    draw_bounding_boxes(IgnoreCulling=True)
+    draw_bounding_boxes()
     draw_controls()
 
 
@@ -258,7 +343,7 @@ RENDER_SIZE = (IMAGE_SIZE[0], IMAGE_SIZE[1] + 102)
 
 # Camera Variables
 camera_matrix = np.array([[721.5377    , 0.        , IMAGE_SIZE[0] / 2, 44.85728],
-                          [0.        , 721.5377    , IMAGE_SIZE[1] / 2, 0.2163791],
+                          [  0.        , 721.5377    , IMAGE_SIZE[1] / 2, 0.2163791],
                           [  0.        ,   0.        ,   1.            ,   0.00274588],
                           [  0.        ,   0.        ,   0.            ,   1.        ]])
 camera_pos = [0, -2, -13]
@@ -268,27 +353,28 @@ camera_rot = [0, 0]
 blink_animation_frame = 0
 blink_animation_time = 15
 boxes = []
-selected_box = -1
+selected_box = 0
+selected_box_input = 0
 
 # Misc Variables
 background_image = None
-background_image_index = 0
+background_image_index = 1
 background_image_index_min = 1
 background_image_index_max = 1000
 buttons = []
 input_state = 0  # Input states: 0 - Nothing selected, camera adjustments. 1 - Box selected, box adjustments. 2 - Input for frame no. 3 - Input for box no.
-message_text = ""
+message_text = "Program loaded"
 mouse_pressed = False
 
 render = pygame.display.set_mode(RENDER_SIZE)
 pygame.display.set_caption("Bounding Box Visualization")
 clock = pygame.time.Clock()
 build_controls()
-
+set_background_image()
 
 
 while True:
-    # Handle Inputs
+    # ### Handle Inputs ### #
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -297,19 +383,26 @@ while True:
         else:
             input_handler(event)
 
-    # Pre-Render Operations
-
+    # ### Pre-Render Operations ### #
     # Display input for input state 2
     if input_state == 2:
-        if blink_animation_frame < 15:
-            message_text = "Input frame number: " + str(background_image_index) + "█"
+        display_text = str(background_image_index) if background_image_index != 0 else ""  # Removes 0 char
+        if blink_animation_frame < blink_animation_time:
+            message_text = "Input frame number: " + display_text + "█"
         else:
-            message_text = "Input frame number: " + str(background_image_index)
+            message_text = "Input frame number: " + display_text
+    # Display input for input state 3
+    elif input_state == 3:
+        display_text = str(selected_box_input)
+        if blink_animation_frame < blink_animation_time:
+            message_text = "Input frame number: " + display_text + "█"
+        else:
+            message_text = "Input frame number: " + display_text
 
-    # Render Screen
+    # ### Render Screen ### #
     render_screen()
 
-    # Post-Render Operations
+    # ### Post-Render Operations ### #
     blink_animation_frame += 1
     if blink_animation_frame > blink_animation_time * 2:
         blink_animation_frame = 0
