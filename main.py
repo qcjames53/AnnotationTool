@@ -170,6 +170,36 @@ def input_handler(event):
                 background_image_index = background_image_index * 10 + int(pygame.key.name(event.key))
 
 
+    if pygame.mouse.get_pressed()[0] == 1 and len(boxes) > 0:
+        # mouse select box
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_x = mouse_pos[0]
+        mouse_y = mouse_pos[1]
+        print("x: ", mouse_x, " y: ", mouse_y)
+        for index, box in enumerate(boxes):
+            pixel_x, pixel_y = get_screen_point(boxes[selected_box].location)
+            if pixel_x + 100 >= mouse_x and pixel_x - 100 <= mouse_x and pixel_y + 150 >= mouse_y and pixel_y - 150 <= mouse_y:
+                # output = input_handler(event, boxes, box_types, index)
+                pass
+    if pygame.mouse.get_pressed()[2] == 1 and len(boxes) > 0:
+        # move box by right click
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_x = mouse_pos[0]
+        mouse_y = mouse_pos[1]
+        if mouse_x < 360:
+            change_x = mouse_x * 0.02
+            boxes[selected_box].mod_location((-change_x, 0, 0))
+        else:
+            change_x = (mouse_x - 360) * 0.02
+            boxes[selected_box].mod_location((change_x, 0, 0))
+
+        if mouse_y < 240:
+            change_y = mouse_y * 0.25
+            boxes[selected_box].mod_location((0, 0, change_y))
+        else:
+            change_y = (mouse_y - 240) * 0.05
+            boxes[selected_box].mod_location((0, 0, -change_y))
+
 # Adds a bounding box to the current frame based on several parameters
 def instantiate_box(index):
     # Constructor: (type, truncated, occluded, alpha, bbox, dimensions, location, rotation_y, color_value)
@@ -255,12 +285,15 @@ pygame.display.set_caption("Bounding Box Visualization")
 clock = pygame.time.Clock()
 build_controls()
 
+
+
 while True:
     # Handle Inputs
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         else:
             input_handler(event)
 
