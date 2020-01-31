@@ -209,6 +209,7 @@ def input_handler(event):
             mouse_pressed = False
             set_background_image()
             message_text = "Set frame to " + str(background_image_index)
+            build_controls()
         elif event.key == pygame.K_BACKSPACE:
             background_image_index = math.floor(background_image_index / 10)
         elif pygame.key.name(event.key).isdigit():
@@ -247,11 +248,13 @@ def input_handler(event):
                             input_state = 1
                             message_text = "Selected box " + str(selected_box)
                             selected_box = i
+                            build_controls()
                             break  # important to break loop, else python takes bad indexes sometimes
 
                 # Select nothing
                 if not found_something:
                     input_state = 0
+                    build_controls()
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_pressed = False
 

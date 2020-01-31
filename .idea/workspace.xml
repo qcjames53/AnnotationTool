@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="Added functionali">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace-HipsterPad-X280.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace-MICROVAC-II.xml" beforeDir="false" />
+    <list default="true" id="c39f2f9f-a01d-4d3e-881d-1f44e2c314bd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -180,7 +178,7 @@
       <workItem from="1580248717433" duration="85000" />
       <workItem from="1580249174408" duration="6743000" />
       <workItem from="1580501176289" duration="2332000" />
-      <workItem from="1580505416203" duration="4548000" />
+      <workItem from="1580505416203" duration="5734000" />
     </task>
     <task id="LOCAL-00001" summary="Added experimental GNU GPL Tinker 3D Library">
       <created>1569257199843</created>
@@ -469,7 +467,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580255730170</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Added a bunch of functionality to existing cosmetic elements. Implemented James' mouse selection and general selection of boxes. Implemented new boxes. Prepped for the camera rotation matrix. Misc other small things.">
+      <created>1580510780294</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1580510780294</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -490,7 +495,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Added camera controls and calibrated grid for 1 meter units." />
     <MESSAGE value="Added instructions, default sizes, and types. The code is still very messy, but we will work on splitting it soon." />
     <MESSAGE value="Changed test image" />
     <MESSAGE value="Merging" />
@@ -515,7 +519,8 @@
     <MESSAGE value="New render system. I believe the math is correct in these cases, just trying to find a valid camera matrix at this point." />
     <MESSAGE value="New camera matrix (taken from old working code). Valid rendering, so pressing forward with further methods." />
     <MESSAGE value="Graphics and too many features to list here." />
-    <option name="LAST_COMMIT_MESSAGE" value="Graphics and too many features to list here." />
+    <MESSAGE value="Added a bunch of functionality to existing cosmetic elements. Implemented James' mouse selection and general selection of boxes. Implemented new boxes. Prepped for the camera rotation matrix. Misc other small things." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a bunch of functionality to existing cosmetic elements. Implemented James' mouse selection and general selection of boxes. Implemented new boxes. Prepped for the camera rotation matrix. Misc other small things." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_text_test.coverage" NAME="opengl_pygame_text_test Coverage Results" MODIFIED="1571681609930" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -528,7 +533,7 @@
     <SUITE FILE_PATH="coverage/AnnotationTool$app.coverage" NAME="app Coverage Results" MODIFIED="1569429887060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$opengl_pygame_simple_old.coverage" NAME="opengl_pygame_simple_old Coverage Results" MODIFIED="1572454190467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$quinn_test_opengl.coverage" NAME="quinn_test_opengl Coverage Results" MODIFIED="1571418177497" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1580510425055" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AnnotationTool$main.coverage" NAME="main Coverage Results" MODIFIED="1580511381759" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AnnotationTool$visualize_gts.coverage" NAME="visualize_gts Coverage Results" MODIFIED="1575654571032" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/misc" />
   </component>
 </project>
