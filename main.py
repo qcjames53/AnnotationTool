@@ -36,6 +36,17 @@ def build_controls():
     global message_text
 
 
+def build_rotation_matrix():
+    global camera_rot
+    global camera_rot_matrix
+    x = camera_rot[0]
+    y = camera_rot[1]
+    z = camera_rot[2]
+    camera_rot_matrix = np.array([[math.cos(y)*math.cos(z),  math.cos(x)*math.sin(z)+math.sin(x)*math.sin(y)*math.cos(z),    math.sin(x)*math.sin(z)-math.cos(x)*math.sin(y)*math.cos(z)],
+                                  [-math.cos(y)*math.sin(z), math.cos(x)*math.cos(z)-math.sin(x)*math.sin(y)*math.sin(z),    math.sin(x)*math.cos(z)+math.cos(x)*math.sin(y)*math.sin(z)],
+                                  [math.sin(y),              -math.sin(x)*math.cos(y),                                       math.cos(x)*math.cos(y)]])
+
+
 def button_handler(index):
     global background_image_index
     global blink_animation_frame
@@ -45,12 +56,11 @@ def button_handler(index):
     global selected_box_input
     if index == 0: # Toggle mode
         if input_state == 0:
-            input_state = 1
+            change_input_state(1)
             message_text = "Set to box adjust mode"
         else:
-            input_state = 0
+            change_input_state(0)
             message_text = "Set to camera adjust mode"
-        build_controls()
     elif index == 1:  # Input Frame Number
         input_state = 2
     elif index == 2:  # + Frame
@@ -87,6 +97,48 @@ def button_handler(index):
         blink_animation_frame = 0
         message_text = "Selected box " + str(selected_box)
 
+    # Box controls
+    multiplier = 1
+    if(pygame.key.get_mods() & pygame.KMOD_CTRL):  # Bitwise and required
+        multiplier = BOX_MOD_MULTIPLIER
+    if(input_state == 1):
+        if index == 10:  # X+
+            boxes[selected_box].mod_location([BOX_MOD_LOCATION*multiplier,0,0])
+        elif index == 11:  # X-
+            boxes[selected_box].mod_location([-BOX_MOD_LOCATION*multiplier,0,0])
+        elif index == 12:  # Z+
+            boxes[selected_box].mod_location([0,0,BOX_MOD_LOCATION*multiplier])
+        elif index == 13:  # Z-
+            boxes[selected_box].mod_location([0,0,-BOX_MOD_LOCATION*multiplier])
+        elif index == 14:  # R+
+            boxes[selected_box].mod_rotation_y(BOX_MOD_ROTATION * multiplier)
+        elif index == 15:  # R-
+            boxes[selected_box].mod_rotation_y(-BOX_MOD_ROTATION * multiplier)
+        elif index == 16:  # L+
+            boxes[selected_box].mod_dimensions([0,0,BOX_MOD_DIMENSION * multiplier])
+        elif index == 17:  # L-
+                boxes[selected_box].mod_dimensions([0,0,-BOX_MOD_DIMENSION * multiplier])
+        elif index == 18:  # W+
+            boxes[selected_box].mod_dimensions([0, BOX_MOD_DIMENSION * multiplier, 0])
+        elif index == 19:  # W-
+            boxes[selected_box].mod_dimensions([0, -BOX_MOD_DIMENSION * multiplier, 0])
+        elif index == 20:  # H+
+            boxes[selected_box].mod_dimensions([BOX_MOD_DIMENSION * multiplier, 0, 0])
+        elif index == 21:  # H-
+            boxes[selected_box].mod_dimensions([-BOX_MOD_DIMENSION * multiplier, 0, 0])
+        elif index == 22:  # Delete Box
+            boxes.pop(selected_box)
+            selected_box = min(selected_box, len(boxes) - 1)
+            blink_animation_frame = 0
+            message_text = "Deleted box"
+
+
+
+
+def change_input_state(index):
+    global input_state
+    input_state = index
+    build_controls()
 
 
 def draw_axis():
@@ -168,10 +220,14 @@ def get_ground_point(point_2d):
 
 
 def get_screen_point(point_3d):
-    # TODO - Rotation Matrix here
-    point_transformed = [point_3d[0] + camera_pos[0], point_3d[1] + camera_pos[1], point_3d[2] + camera_pos[2]]
-    point_as_matrix = np.array([point_transformed[0], point_transformed[1], point_transformed[2], 1])
-    point = camera_matrix.dot(point_as_matrix)
+    # Rotate point around origin
+    point = np.array([point_3d[0], point_3d[1], point_3d[2]])
+    point_rotated = point.dot(camera_rot_matrix)
+    point_rotated[0] += camera_pos[0]
+    point_rotated[1] += camera_pos[1]
+    point_rotated[2] += camera_pos[2]
+    point_transformed = np.array([point_rotated[0], point_rotated[1], point_rotated[2], 1])
+    point = camera_matrix.dot(point_transformed)
     point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])
     return point_scaled[0], point_scaled[1]
 
@@ -179,6 +235,7 @@ def get_screen_point(point_3d):
 def input_handler(event):
     global background_image_index
     global blink_animation_frame
+    global ctrl_pressed
     global input_state
     global message_text
     global mouse_pressed
@@ -189,10 +246,9 @@ def input_handler(event):
     if input_state == 3 and event.type == pygame.KEYDOWN:
         if event.key == pygame.K_RETURN:
             selected_box = min(len(boxes) - 1, max(0, selected_box_input))
-            input_state = 1
+            change_input_state(1)
             mouse_pressed = False
             message_text = "Selected box " + str(selected_box)
-            build_controls()
         elif event.key == pygame.K_BACKSPACE:
             selected_box_input = math.floor(selected_box_input / 10)
         elif pygame.key.name(event.key).isdigit():
@@ -205,11 +261,10 @@ def input_handler(event):
                 background_image_index = background_image_index_min
             elif background_image_index > background_image_index_max:
                 background_image_index = background_image_index_max
-            input_state = 1
+            change_input_state(1)
             mouse_pressed = False
             set_background_image()
             message_text = "Set frame to " + str(background_image_index)
-            build_controls()
         elif event.key == pygame.K_BACKSPACE:
             background_image_index = math.floor(background_image_index / 10)
         elif pygame.key.name(event.key).isdigit():
@@ -245,16 +300,14 @@ def input_handler(event):
                         if min_x <= mouse_pos[0] <= max_x and min_y <= mouse_pos[1] <= max_y:
                             blink_animation_frame = 0
                             found_something = True
-                            input_state = 1
+                            change_input_state(1)
                             message_text = "Selected box " + str(selected_box)
                             selected_box = i
-                            build_controls()
                             break  # important to break loop, else python takes bad indexes sometimes
 
                 # Select nothing
                 if not found_something:
-                    input_state = 0
-                    build_controls()
+                    change_input_state(0)
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_pressed = False
 
@@ -290,7 +343,7 @@ def instantiate_box(index):
     # Constructor: (type, truncated, occluded, alpha, bbox, dimensions, location, rotation_y, color_value)
     new_box = BoundingBox(BOX_TYPES[index][0], 0, 0, 0, [0,0,0,0], BOX_TYPES[index][1], (0,0,0), 0, BOX_TYPES[index][2])
     blink_animation_frame = 0
-    input_state = 1
+    change_input_state(1)
     selected_box = len(boxes)
     message_text = "New " + str(BOX_TYPES[index][0]) + " created at index " + str(selected_box)
     boxes.append(new_box)
@@ -334,6 +387,10 @@ C_GREEN = (0, 255, 0)
 C_BLUE = (0, 0, 255)
 
 BOX_EDGE_RENDER_ORDER = ((0, 1), (0, 3), (0, 4), (2, 1), (2, 3), (2, 7), (6, 3), (6, 4), (6, 7), (5, 1), (5, 4), (5, 7), (8, 9))
+BOX_MOD_MULTIPLIER = 4
+BOX_MOD_LOCATION = 0.1
+BOX_MOD_DIMENSION = 0.1
+BOX_MOD_ROTATION = math.pi / 32
 BOX_TYPES = (("Car", (1.7, 2.0, 5.0), C_RED),  # (name, dimensions(h,w,l), color_value)
              ("Cyclist", (1.8,0.5,2.0), C_GREEN),
              ("Pedestrian", (1.7,0.5,0.5), C_BLUE))
@@ -350,7 +407,10 @@ camera_matrix = np.array([[721.5377    , 0.        , IMAGE_SIZE[0] / 2, 44.85728
                           [  0.        ,   0.        ,   1.            ,   0.00274588],
                           [  0.        ,   0.        ,   0.            ,   1.        ]])
 camera_pos = [0, -2, -13]
-camera_rot = [0, 0]
+camera_rot = [0, 0, 0]
+camera_rot_matrix = None
+build_rotation_matrix()
+print(camera_rot_matrix)
 
 # Box Variables
 blink_animation_frame = 0
@@ -365,6 +425,7 @@ background_image_index = 1
 background_image_index_min = 1
 background_image_index_max = 1000
 buttons = []
+ctrl_pressed = False
 input_state = 0  # Input states: 0 - Nothing selected, camera adjustments. 1 - Box selected, box adjustments. 2 - Input for frame no. 3 - Input for box no.
 message_text = "Program loaded"
 mouse_pressed = False
@@ -406,6 +467,11 @@ while True:
     render_screen()
 
     # ### Post-Render Operations ### #
+    camera_rot[1] += 0.01
+    camera_rot[2] += 0.001
+    build_rotation_matrix()
+
+
     blink_animation_frame += 1
     if blink_animation_frame > blink_animation_time * 2:
         blink_animation_frame = 0

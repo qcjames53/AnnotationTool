@@ -148,8 +148,8 @@ class BoundingBox():
         self.build_vertices()
 
     def mod_dimensions(self, distances):
-        self.set_dimensions((self.dimensions[0] + distances[0], self.dimensions[1] + distances[1],
-                             self.dimensions[2] + distances[2]))
+        self.set_dimensions((max(self.dimensions[0] + distances[0],0), max(self.dimensions[1] + distances[1],0),
+                             max(self.dimensions[2] + distances[2],0)))
 
     def set_rotation_y(self, rotation_y):
         rotation_y %= (2 * math.pi)
