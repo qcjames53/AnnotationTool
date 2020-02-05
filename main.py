@@ -33,7 +33,8 @@ def build_controls():
         r_text = [
             ["Mode", "|", "Select Frame", "+", "-", "|", "New Car", "New Pedestrian", "New Cyclist", "|", "Select Box",
              "+", "-"],
-            ["x+", "x-", "z+", "z-", "|", "r+", "r-", "|", "l+", "l-", "w+", "w-", "h+", "h-", "|", "Delete Box"]]
+            ["x+", "x-", "z+", "z-", "|", "r+", "r-", "|", "l+", "l-", "w+", "w-", "h+", "h-", "|", "Delete Box", "|",
+             "Print KITTI data"]]
     for row in r_text:
         for text in row:
             if text == "|":
@@ -112,7 +113,7 @@ def button_handler(index):
         change_input_state(1)
 
     # Box controls
-    if(input_state == 1):
+    if input_state == 1 and len(boxes) > 0:
         multiplier = 1
         if (pygame.key.get_mods() & pygame.KMOD_CTRL):  # Bitwise and required
             multiplier = BOX_MOD_MULTIPLIER
@@ -145,6 +146,9 @@ def button_handler(index):
             selected_box = min(selected_box, len(boxes) - 1)
             blink_animation_frame = 0
             message_text = "Deleted box"
+        elif index == 23:  # Print KITTI Data
+            print(boxes[selected_box].to_string())
+            message_text = "Data printed to console"
 
         if index != 22:
             message_text = boxes[selected_box].to_string_rounded()
@@ -315,32 +319,34 @@ def input_handler(event):
     global selected_box_input
 
     # ### Hang input for box select number ### #
-    if input_state == 3 and event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_RETURN:
-            selected_box = min(len(boxes) - 1, max(0, selected_box_input))
-            change_input_state(1)
-            mouse_pressed = False
-            message_text = "Selected box " + str(selected_box)
-        elif event.key == pygame.K_BACKSPACE:
-            selected_box_input = math.floor(selected_box_input / 10)
-        elif pygame.key.name(event.key).isdigit():
-            selected_box_input = selected_box_input * 10 + int(pygame.key.name(event.key))
+    if input_state == 3:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                selected_box = min(len(boxes) - 1, max(0, selected_box_input))
+                change_input_state(1)
+                mouse_pressed = False
+                message_text = "Selected box " + str(selected_box)
+            elif event.key == pygame.K_BACKSPACE:
+                selected_box_input = math.floor(selected_box_input / 10)
+            elif pygame.key.name(event.key).isdigit():
+                selected_box_input = selected_box_input * 10 + int(pygame.key.name(event.key))
 
     # ### Hang input for frame select number ### #
-    elif input_state == 2 and event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_RETURN:
-            if background_image_index < background_image_index_min:
-                background_image_index = background_image_index_min
-            elif background_image_index > background_image_index_max:
-                background_image_index = background_image_index_max
-            change_input_state(1)
-            mouse_pressed = False
-            set_background_image()
-            message_text = "Set frame to " + str(background_image_index)
-        elif event.key == pygame.K_BACKSPACE:
-            background_image_index = math.floor(background_image_index / 10)
-        elif pygame.key.name(event.key).isdigit():
-            background_image_index = background_image_index * 10 + int(pygame.key.name(event.key))
+    elif input_state == 2:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                if background_image_index < background_image_index_min:
+                    background_image_index = background_image_index_min
+                elif background_image_index > background_image_index_max:
+                    background_image_index = background_image_index_max
+                change_input_state(1)
+                mouse_pressed = False
+                set_background_image()
+                message_text = "Set frame to " + str(background_image_index)
+            elif event.key == pygame.K_BACKSPACE:
+                background_image_index = math.floor(background_image_index / 10)
+            elif pygame.key.name(event.key).isdigit():
+                background_image_index = background_image_index * 10 + int(pygame.key.name(event.key))
 
     # ### Normal input routines ### #
     else:
@@ -378,7 +384,7 @@ def input_handler(event):
                             break  # important to break loop, else python takes bad indexes sometimes
 
                 # Select nothing
-                if not found_something:
+                if not found_something and mouse_pos[1] < IMAGE_SIZE[1]:
                     change_input_state(0)
                     message_text = "No selection"
         elif event.type == pygame.MOUSEBUTTONUP:
