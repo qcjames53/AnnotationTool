@@ -44,7 +44,7 @@ class BoundingBox():
 
     def build_vertices(self):
         v0_x = self.location[0] + self.dimensions[1] / 2
-        v0_y = self.location[1] + self.dimensions[0]
+        v0_y = self.location[1] - self.dimensions[0]
         v0_z = self.location[2] - self.dimensions[2] / 2
         v0_x2 = (self.location[0] + (((v0_x-self.location[0]) * math.cos(self.rotation_y)) - ((v0_z-self.location[2]) * math.sin(self.rotation_y))))
         v0_z2 = (self.location[2] + (((v0_z-self.location[2]) * math.cos(self.rotation_y)) + ((v0_x-self.location[0]) * math.sin(self.rotation_y))))
@@ -65,14 +65,14 @@ class BoundingBox():
         v2 = (v2_x2, v2_y, v2_z2)
 
         v3_x = self.location[0] - self.dimensions[1] / 2
-        v3_y = self.location[1] + self.dimensions[0]
+        v3_y = self.location[1] - self.dimensions[0]
         v3_z = self.location[2] - self.dimensions[2] / 2
         v3_x2 = self.location[0] + ((v3_x-self.location[0]) * math.cos(self.rotation_y) - (v3_z-self.location[2]) * math.sin(self.rotation_y))
         v3_z2 = self.location[2] + ((v3_z-self.location[2]) * math.cos(self.rotation_y) + (v3_x-self.location[0]) * math.sin(self.rotation_y))
         v3 = (v3_x2, v3_y, v3_z2)
 
         v4_x = self.location[0] + self.dimensions[1] / 2
-        v4_y = self.location[1] + self.dimensions[0]
+        v4_y = self.location[1] - self.dimensions[0]
         v4_z = self.location[2] + self.dimensions[2] / 2
         v4_x2 = self.location[0] + ((v4_x-self.location[0]) * math.cos(self.rotation_y) - (v4_z-self.location[2]) * math.sin(self.rotation_y))
         v4_z2 = self.location[2] + ((v4_z-self.location[2]) * math.cos(self.rotation_y) + (v4_x-self.location[0]) * math.sin(self.rotation_y))
@@ -86,7 +86,7 @@ class BoundingBox():
         v5 = (v5_x2, v5_y, v5_z2)
 
         v6_x = self.location[0] - self.dimensions[1] / 2
-        v6_y = self.location[1] + self.dimensions[0]
+        v6_y = self.location[1] - self.dimensions[0]
         v6_z = self.location[2] + self.dimensions[2] / 2
         v6_x2 = self.location[0] + ((v6_x-self.location[0]) * math.cos(self.rotation_y) - (v6_z-self.location[2]) * math.sin(self.rotation_y))
         v6_z2 = self.location[2] + ((v6_z-self.location[2]) * math.cos(self.rotation_y) + (v6_x-self.location[0]) * math.sin(self.rotation_y))
@@ -100,14 +100,14 @@ class BoundingBox():
         v7 = (v7_x2, v7_y, v7_z2)
 
         v8_x = self.location[0]
-        v8_y = self.location[1] + self.dimensions[0] / 2
+        v8_y = self.location[1] - self.dimensions[0] / 2
         v8_z = self.location[2] + self.dimensions[2] / 2
         v8_x2 = self.location[0] + ((v8_x - self.location[0]) * math.cos(self.rotation_y) - (v8_z - self.location[2]) * math.sin(self.rotation_y))
         v8_z2 = self.location[2] + ((v8_z - self.location[2]) * math.cos(self.rotation_y) + (v8_x - self.location[0]) * math.sin(self.rotation_y))
         v8 = (v8_x2, v8_y, v8_z2)
 
         v9_x = self.location[0]
-        v9_y = self.location[1] + self.dimensions[0] / 2
+        v9_y = self.location[1] - self.dimensions[0] / 2
         v9_z = self.location[2] + self.dimensions[2] / 2 + 1
         v9_x2 = self.location[0] + ((v9_x - self.location[0]) * math.cos(self.rotation_y) - (v9_z - self.location[2]) * math.sin(self.rotation_y))
         v9_z2 = self.location[2] + ((v9_z - self.location[2]) * math.cos(self.rotation_y) + (v9_x - self.location[0]) * math.sin(self.rotation_y))

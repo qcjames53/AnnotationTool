@@ -8,6 +8,16 @@ from button import *
 pygame.init()
 
 
+def build_camera_matrix():
+    global IMAGE_SIZE
+    global camera_fov
+    global camera_matrix
+    camera_matrix = np.array([[camera_fov,  0.,         IMAGE_SIZE[0] / 2,  44.85728],
+                              [0.,          camera_fov, IMAGE_SIZE[1] / 2,  0.2163791],
+                              [0.,          0.,         1.,                 0.00274588],
+                              [0.,          0.,         0.,                 1.]])
+
+
 def build_controls():
     global buttons
     global input_state
@@ -17,7 +27,8 @@ def build_controls():
     if input_state == 0:
         r_text = [
             ["Mode", "|", "Select Frame", "+", "-", "|", "New Car", "New Pedestrian", "New Cyclist", "|", "Select Box",
-             "+", "-"]]
+             "+", "-"],
+            ["FOV+","FOV-","|","rx+","rx-","ry+","ry-","rz+","rz-","|","x+","x-","y+","y-","z+","z-"]]
     else:
         r_text = [
             ["Mode", "|", "Select Frame", "+", "-", "|", "New Car", "New Pedestrian", "New Cyclist", "|", "Select Box",
@@ -50,6 +61,7 @@ def build_rotation_matrix():
 def button_handler(index):
     global background_image_index
     global blink_animation_frame
+    global camera_fov
     global input_state
     global message_text
     global selected_box
@@ -90,18 +102,20 @@ def button_handler(index):
             selected_box = len(boxes) - 1
         blink_animation_frame = 0
         message_text = "Selected box " + str(selected_box)
+        change_input_state(1)
     elif index == 9:  # Box Number --
         selected_box -= 1
         if selected_box < 0:
             selected_box = 0
         blink_animation_frame = 0
         message_text = "Selected box " + str(selected_box)
+        change_input_state(1)
 
     # Box controls
-    multiplier = 1
-    if(pygame.key.get_mods() & pygame.KMOD_CTRL):  # Bitwise and required
-        multiplier = BOX_MOD_MULTIPLIER
     if(input_state == 1):
+        multiplier = 1
+        if (pygame.key.get_mods() & pygame.KMOD_CTRL):  # Bitwise and required
+            multiplier = BOX_MOD_MULTIPLIER
         if index == 10:  # X+
             boxes[selected_box].mod_location([BOX_MOD_LOCATION*multiplier,0,0])
         elif index == 11:  # X-
@@ -132,7 +146,64 @@ def button_handler(index):
             blink_animation_frame = 0
             message_text = "Deleted box"
 
+        if index != 22:
+            message_text = boxes[selected_box].to_string_rounded()
 
+    # Camera controls
+    if(input_state == 0):
+        multiplier = 1
+        if (pygame.key.get_mods() & pygame.KMOD_CTRL):  # Bitwise and required
+            multiplier = CAMERA_MOD_MULTIPLIER
+        if index == 10:  # FOV+
+            camera_fov += CAMERA_MOD_FOV * multiplier
+            build_camera_matrix()
+            message_text = "FOV changed to " + str(camera_fov)
+        elif index == 11:  # FOV-
+            camera_fov -= CAMERA_MOD_FOV * multiplier
+            build_camera_matrix()
+            message_text = "FOV changed to " + str(camera_fov)
+        elif index == 12:  # rx+
+            camera_rot[0] += CAMERA_MOD_ROTATION * multiplier
+            build_rotation_matrix()
+            message_text = "Camera rotation changed to " + str(camera_rot)
+        elif index == 13:  # rx-
+            camera_rot[0] -= CAMERA_MOD_ROTATION * multiplier
+            build_rotation_matrix()
+            message_text = "Camera rotation changed to " + str(camera_rot)
+        elif index == 14:  # ry+
+            camera_rot[1] += CAMERA_MOD_ROTATION * multiplier
+            build_rotation_matrix()
+            message_text = "Camera rotation changed to " + str(camera_rot)
+        elif index == 15:  # ry-
+            camera_rot[1] -= CAMERA_MOD_ROTATION * multiplier
+            build_rotation_matrix()
+            message_text = "Camera rotation changed to " + str(camera_rot)
+        elif index == 16:  # rz+
+            camera_rot[2] += CAMERA_MOD_ROTATION * multiplier
+            build_rotation_matrix()
+            message_text = "Camera rotation changed to " + str(camera_rot)
+        elif index == 17:  # rz-
+            camera_rot[2] -= CAMERA_MOD_ROTATION * multiplier
+            build_rotation_matrix()
+            message_text = "Camera rotation changed to " + str(camera_rot)
+        elif index == 18:  #x+
+            camera_pos[0] += CAMERA_MOD_LOCATION * multiplier
+            message_text = "Camera pos changed to " + str(camera_pos)
+        elif index == 19:  #x-
+            camera_pos[0] -= CAMERA_MOD_LOCATION * multiplier
+            message_text = "Camera pos changed to " + str(camera_pos)
+        elif index == 20:  #y+
+            camera_pos[1] += CAMERA_MOD_LOCATION * multiplier
+            message_text = "Camera pos changed to " + str(camera_pos)
+        elif index == 21:  #y-
+            camera_pos[1] -= CAMERA_MOD_LOCATION * multiplier
+            message_text = "Camera pos changed to " + str(camera_pos)
+        elif index == 22:  #z+
+            camera_pos[2] += CAMERA_MOD_LOCATION * multiplier
+            message_text = "Camera pos changed to " + str(camera_pos)
+        elif index == 23:  #z-
+            camera_pos[2] -= CAMERA_MOD_LOCATION * multiplier
+            message_text = "Camera pos changed to " + str(camera_pos)
 
 
 def change_input_state(index):
@@ -196,6 +267,7 @@ def draw_controls():
 
 # Draws a grid to the boundaries of the culling area every 1 unit
 def draw_grid():
+    global  CULLING_AREA
     x_min = CULLING_AREA[0][0]
     x_max = CULLING_AREA[1][0]
     y_min = CULLING_AREA[0][2]
@@ -222,14 +294,14 @@ def get_ground_point(point_2d):
 def get_screen_point(point_3d):
     # Rotate point around origin
     point = np.array([point_3d[0], point_3d[1], point_3d[2]])
-    point_rotated = point.dot(camera_rot_matrix)
+    point_rotated = -point.dot(camera_rot_matrix)
     point_rotated[0] += camera_pos[0]
     point_rotated[1] += camera_pos[1]
     point_rotated[2] += camera_pos[2]
     point_transformed = np.array([point_rotated[0], point_rotated[1], point_rotated[2], 1])
     point = camera_matrix.dot(point_transformed)
     point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])
-    return point_scaled[0], point_scaled[1]
+    return math.floor(point_scaled[0]), math.floor(point_scaled[1])
 
 
 def input_handler(event):
@@ -308,6 +380,7 @@ def input_handler(event):
                 # Select nothing
                 if not found_something:
                     change_input_state(0)
+                    message_text = "No selection"
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_pressed = False
 
@@ -361,7 +434,8 @@ def render_screen():
         render.fill([0,0,0])
     else:
         render.blit(background_image, ((0,0),(IMAGE_SIZE[0],IMAGE_SIZE[1])))
-    draw_grid()
+    if input_state == 0:
+        draw_grid()
     draw_axis()
     draw_bounding_boxes()
     draw_controls()
@@ -394,23 +468,27 @@ BOX_MOD_ROTATION = math.pi / 32
 BOX_TYPES = (("Car", (1.7, 2.0, 5.0), C_RED),  # (name, dimensions(h,w,l), color_value)
              ("Cyclist", (1.8,0.5,2.0), C_GREEN),
              ("Pedestrian", (1.7,0.5,0.5), C_BLUE))
+CAMERA_MOD_MULTIPLIER = 16
+CAMERA_MOD_FOV = 1
+CAMERA_MOD_ROTATION = math.pi / 1024
+CAMERA_MOD_LOCATION = 0.025
+
 CONTROL_FONT = pygame.font.Font("resources/ubuntu_mono.ttf", 16)
-CULLING_AREA = ((-5,-5,-5),(5,10,5))  # Will only draw boxes inside these two coordinates
+CULLING_AREA = ((-30, -5, -10), (30, 10, 60))  # Will only draw boxes inside these two coordinates
 GRID_COLOR = (80, 80, 80)
 LINE_WIDTH = 1
 IMAGE_SIZE = (720, 480)
 RENDER_SIZE = (IMAGE_SIZE[0], IMAGE_SIZE[1] + 102)
 
 # Camera Variables
-camera_matrix = np.array([[721.5377    , 0.        , IMAGE_SIZE[0] / 2, 44.85728],
-                          [  0.        , 721.5377    , IMAGE_SIZE[1] / 2, 0.2163791],
-                          [  0.        ,   0.        ,   1.            ,   0.00274588],
-                          [  0.        ,   0.        ,   0.            ,   1.        ]])
-camera_pos = [0, -2, -13]
-camera_rot = [0, 0, 0]
+camera_fov = 721
+camera_matrix = None
+camera_pos = [0, -4.225, -13.075]
+camera_rot = [0.478602, 0.006136, 0]
 camera_rot_matrix = None
+
+build_camera_matrix()
 build_rotation_matrix()
-print(camera_rot_matrix)
 
 # Box Variables
 blink_animation_frame = 0
@@ -435,7 +513,6 @@ pygame.display.set_caption("Bounding Box Visualization")
 clock = pygame.time.Clock()
 build_controls()
 set_background_image()
-
 
 while True:
     # ### Handle Inputs ### #
@@ -467,11 +544,6 @@ while True:
     render_screen()
 
     # ### Post-Render Operations ### #
-    camera_rot[1] += 0.01
-    camera_rot[2] += 0.001
-    build_rotation_matrix()
-
-
     blink_animation_frame += 1
     if blink_animation_frame > blink_animation_time * 2:
         blink_animation_frame = 0
