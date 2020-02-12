@@ -487,9 +487,9 @@ IMAGE_SIZE = (720, 480)
 RENDER_SIZE = (IMAGE_SIZE[0], IMAGE_SIZE[1] + 102)
 
 # Camera Variables
-camera_fov = 721
-camera_pos = [0, -4.225, -13.075]
-camera_rot = [0.478602, 0.006136, 0]
+camera_fov = 745
+camera_pos = [0, -4.225, -13.2]
+camera_rot = [2.675262, -0.0276116, 0]
 projection_matrix = None
 
 build_matrix()
