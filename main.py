@@ -8,14 +8,25 @@ from button import *
 pygame.init()
 
 
-def build_camera_matrix():
+def build_matrix():
     global IMAGE_SIZE
     global camera_fov
-    global camera_matrix
-    camera_matrix = np.array([[camera_fov,  0.,         IMAGE_SIZE[0] / 2,  44.85728],
-                              [0.,          camera_fov, IMAGE_SIZE[1] / 2,  0.2163791],
-                              [0.,          0.,         1.,                 0.00274588],
-                              [0.,          0.,         0.,                 1.]])
+    global camera_rot
+    global camera_pos
+    global projection_matrix
+    intrinsics = np.array([[camera_fov,  0.,         IMAGE_SIZE[0] / 2,  44.85728],
+                           [0.,          camera_fov, IMAGE_SIZE[1] / 2,  0.2163791],
+                           [0.,          0.,         1.,                 0.00274588],
+                           [0.,          0.,         0.,                 1.]])
+    x = camera_rot[0]
+    y = camera_rot[1]
+    z = camera_rot[2]
+    extrinsics = np.array([[math.cos(y) * math.cos(z),   math.cos(x) * math.sin(z) + math.sin(x) * math.sin(y) * math.cos(z),    math.sin(x) * math.sin(z) - math.cos(x) * math.sin(y) * math.cos(z),    camera_pos[0]],
+                                  [-math.cos(y) * math.sin(z),  math.cos(x) * math.cos(z) - math.sin(x) * math.sin(y) * math.sin(z),    math.sin(x) * math.cos(z) + math.cos(x) * math.sin(y) * math.sin(z),    camera_pos[1]],
+                                  [math.sin(y),                 -math.sin(x) * math.cos(y),                                             math.cos(x) * math.cos(y),                                              camera_pos[2]],
+                                  [0,                           0,                                                                      0,                                                                      1]])
+    projection_matrix = intrinsics.dot(extrinsics)
+
 
 
 def build_controls():
@@ -46,17 +57,6 @@ def build_controls():
         current_x = 4
         current_y += 24
     global message_text
-
-
-def build_rotation_matrix():
-    global camera_rot
-    global camera_rot_matrix
-    x = camera_rot[0]
-    y = camera_rot[1]
-    z = camera_rot[2]
-    camera_rot_matrix = np.array([[math.cos(y)*math.cos(z),  math.cos(x)*math.sin(z)+math.sin(x)*math.sin(y)*math.cos(z),    math.sin(x)*math.sin(z)-math.cos(x)*math.sin(y)*math.cos(z)],
-                                  [-math.cos(y)*math.sin(z), math.cos(x)*math.cos(z)-math.sin(x)*math.sin(y)*math.sin(z),    math.sin(x)*math.cos(z)+math.cos(x)*math.sin(y)*math.sin(z)],
-                                  [math.sin(y),              -math.sin(x)*math.cos(y),                                       math.cos(x)*math.cos(y)]])
 
 
 def button_handler(index):
@@ -160,53 +160,59 @@ def button_handler(index):
             multiplier = CAMERA_MOD_MULTIPLIER
         if index == 10:  # FOV+
             camera_fov += CAMERA_MOD_FOV * multiplier
-            build_camera_matrix()
+            build_matrix()
             message_text = "FOV changed to " + str(camera_fov)
         elif index == 11:  # FOV-
             camera_fov -= CAMERA_MOD_FOV * multiplier
-            build_camera_matrix()
+            build_matrix()
             message_text = "FOV changed to " + str(camera_fov)
         elif index == 12:  # rx+
             camera_rot[0] += CAMERA_MOD_ROTATION * multiplier
-            build_rotation_matrix()
+            build_matrix()
             message_text = "Camera rotation changed to " + str(camera_rot)
         elif index == 13:  # rx-
             camera_rot[0] -= CAMERA_MOD_ROTATION * multiplier
-            build_rotation_matrix()
+            build_matrix()
             message_text = "Camera rotation changed to " + str(camera_rot)
         elif index == 14:  # ry+
             camera_rot[1] += CAMERA_MOD_ROTATION * multiplier
-            build_rotation_matrix()
+            build_matrix()
             message_text = "Camera rotation changed to " + str(camera_rot)
         elif index == 15:  # ry-
             camera_rot[1] -= CAMERA_MOD_ROTATION * multiplier
-            build_rotation_matrix()
+            build_matrix()
             message_text = "Camera rotation changed to " + str(camera_rot)
         elif index == 16:  # rz+
             camera_rot[2] += CAMERA_MOD_ROTATION * multiplier
-            build_rotation_matrix()
+            build_matrix()
             message_text = "Camera rotation changed to " + str(camera_rot)
         elif index == 17:  # rz-
             camera_rot[2] -= CAMERA_MOD_ROTATION * multiplier
-            build_rotation_matrix()
+            build_matrix()
             message_text = "Camera rotation changed to " + str(camera_rot)
         elif index == 18:  #x+
             camera_pos[0] += CAMERA_MOD_LOCATION * multiplier
+            build_matrix()
             message_text = "Camera pos changed to " + str(camera_pos)
         elif index == 19:  #x-
             camera_pos[0] -= CAMERA_MOD_LOCATION * multiplier
+            build_matrix()
             message_text = "Camera pos changed to " + str(camera_pos)
         elif index == 20:  #y+
             camera_pos[1] += CAMERA_MOD_LOCATION * multiplier
+            build_matrix()
             message_text = "Camera pos changed to " + str(camera_pos)
         elif index == 21:  #y-
             camera_pos[1] -= CAMERA_MOD_LOCATION * multiplier
+            build_matrix()
             message_text = "Camera pos changed to " + str(camera_pos)
         elif index == 22:  #z+
             camera_pos[2] += CAMERA_MOD_LOCATION * multiplier
+            build_matrix()
             message_text = "Camera pos changed to " + str(camera_pos)
         elif index == 23:  #z-
             camera_pos[2] -= CAMERA_MOD_LOCATION * multiplier
+            build_matrix()
             message_text = "Camera pos changed to " + str(camera_pos)
 
 
@@ -296,14 +302,8 @@ def get_ground_point(point_2d):
 
 
 def get_screen_point(point_3d):
-    # Rotate point around origin
-    point = np.array([point_3d[0], point_3d[1], point_3d[2]])
-    point_rotated = -point.dot(camera_rot_matrix)
-    point_rotated[0] += camera_pos[0]
-    point_rotated[1] += camera_pos[1]
-    point_rotated[2] += camera_pos[2]
-    point_transformed = np.array([point_rotated[0], point_rotated[1], point_rotated[2], 1])
-    point = camera_matrix.dot(point_transformed)
+    point = np.array([-point_3d[0], point_3d[1], point_3d[2], 1])
+    point = projection_matrix.dot(point)
     point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])
     return math.floor(point_scaled[0]), math.floor(point_scaled[1])
 
@@ -488,13 +488,11 @@ RENDER_SIZE = (IMAGE_SIZE[0], IMAGE_SIZE[1] + 102)
 
 # Camera Variables
 camera_fov = 721
-camera_matrix = None
 camera_pos = [0, -4.225, -13.075]
 camera_rot = [0.478602, 0.006136, 0]
-camera_rot_matrix = None
+projection_matrix = None
 
-build_camera_matrix()
-build_rotation_matrix()
+build_matrix()
 
 # Box Variables
 blink_animation_frame = 0
