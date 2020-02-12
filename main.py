@@ -297,8 +297,14 @@ def draw_line_screen(px1, px2, color):
 
 
 def get_ground_point(point_2d):
-    # TODO - Fancy reverse camera matrix math and shit
-    None
+    global projection_matrix
+    p_inv = np.linalg.inv(projection_matrix)  # Inverse of the projection matrix
+    x = point_2d[0]
+    y = point_2d[1]
+    z = (-p_inv[1][3]) / (x*p_inv[1][0] + y*p_inv[1][1] + p_inv[1][2])  # Finding depth buffer (assumes y3d = 0)
+    x3d = x*z*p_inv[0][0] + y*z*p_inv[0][1] + z*p_inv[0][2] + p_inv[0][3]  # Some manual matrix math
+    z3d = x*z*p_inv[2][0] + y*z*p_inv[2][1] + z*p_inv[2][2] + p_inv[2][3]
+    return -x3d, 0, z3d  # Remember to negate x to change handedness
 
 
 def get_screen_point(point_3d):
