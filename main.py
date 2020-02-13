@@ -398,24 +398,16 @@ def input_handler(event):
 
     # ### James' mouse movement ### #
     # TODO - Add to normal input routines above
-    # if pygame.mouse.get_pressed()[2] == 1 and len(boxes) > 0:
-    #     # move box by right click
-    #     mouse_pos = pygame.mouse.get_pos()
-    #     mouse_x = mouse_pos[0]
-    #     mouse_y = mouse_pos[1]
-    #     if mouse_x < 360:
-    #         change_x = mouse_x * 0.02
-    #         boxes[selected_box].mod_location((-change_x, 0, 0))
-    #     else:
-    #         change_x = (mouse_x - 360) * 0.02
-    #         boxes[selected_box].mod_location((change_x, 0, 0))
-    #
-    #     if mouse_y < 240:
-    #         change_y = mouse_y * 0.25
-    #         boxes[selected_box].mod_location((0, 0, change_y))
-    #     else:
-    #         change_y = (mouse_y - 240) * 0.05
-    #         boxes[selected_box].mod_location((0, 0, -change_y))
+    if pygame.mouse.get_pressed()[2] == 1 and len(boxes) > 0:
+        # move box by right click
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_x = mouse_pos[0]
+        mouse_y = mouse_pos[1]
+        point2d = [mouse_x, mouse_y]
+        x, y, z = get_ground_point(point2d)
+        location3d = [x, y, z]
+        boxes[selected_box].set_location(location3d)
+
 
 
 # Adds a bounding box to the current frame based on several parameters
