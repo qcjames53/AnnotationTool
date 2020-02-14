@@ -1,35 +1,14 @@
 import numpy as np
 import pygame
 import sys
-
 from bounding_box import *
 from button import *
 
-pygame.init()
-
-
-def build_matrix():
-    global IMAGE_SIZE
-    global camera_fov
-    global camera_rot
-    global camera_pos
-    global projection_matrix
-    intrinsics = np.array([[camera_fov,  0.,         IMAGE_SIZE[0] / 2,  44.85728],
-                           [0.,          camera_fov, IMAGE_SIZE[1] / 2,  0.2163791],
-                           [0.,          0.,         1.,                 0.00274588],
-                           [0.,          0.,         0.,                 1.]])
-    x = camera_rot[0]
-    y = camera_rot[1]
-    z = camera_rot[2]
-    extrinsics = np.array([[math.cos(y) * math.cos(z),   math.cos(x) * math.sin(z) + math.sin(x) * math.sin(y) * math.cos(z),    math.sin(x) * math.sin(z) - math.cos(x) * math.sin(y) * math.cos(z),    camera_pos[0]],
-                                  [-math.cos(y) * math.sin(z),  math.cos(x) * math.cos(z) - math.sin(x) * math.sin(y) * math.sin(z),    math.sin(x) * math.cos(z) + math.cos(x) * math.sin(y) * math.sin(z),    camera_pos[1]],
-                                  [math.sin(y),                 -math.sin(x) * math.cos(y),                                             math.cos(x) * math.cos(y),                                              camera_pos[2]],
-                                  [0,                           0,                                                                      0,                                                                      1]])
-    projection_matrix = intrinsics.dot(extrinsics)
-
+pygame.init()  # PyGame is initialized up here to use features in declaring constants below.
 
 
 def build_controls():
+    """Creates an appropriate array of button objects for the bottom toolbar."""
     global buttons
     global input_state
     buttons = []
@@ -59,7 +38,29 @@ def build_controls():
     global message_text
 
 
+def build_matrix():
+    """Builds a new camera matrix from intrinsic and extrinsic values. Call whenever the camera moves."""
+    global IMAGE_SIZE
+    global camera_fov
+    global camera_rot
+    global camera_pos
+    global projection_matrix
+    intrinsics = np.array([[camera_fov,  0.,         IMAGE_SIZE[0] / 2,  44.85728],
+                           [0.,          camera_fov, IMAGE_SIZE[1] / 2,  0.2163791],
+                           [0.,          0.,         1.,                 0.00274588],
+                           [0.,          0.,         0.,                 1.]])
+    x = camera_rot[0]
+    y = camera_rot[1]
+    z = camera_rot[2]
+    extrinsics = np.array([[math.cos(y) * math.cos(z),   math.cos(x) * math.sin(z) + math.sin(x) * math.sin(y) * math.cos(z),    math.sin(x) * math.sin(z) - math.cos(x) * math.sin(y) * math.cos(z),    camera_pos[0]],
+                                  [-math.cos(y) * math.sin(z),  math.cos(x) * math.cos(z) - math.sin(x) * math.sin(y) * math.sin(z),    math.sin(x) * math.cos(z) + math.cos(x) * math.sin(y) * math.sin(z),    camera_pos[1]],
+                                  [math.sin(y),                 -math.sin(x) * math.cos(y),                                             math.cos(x) * math.cos(y),                                              camera_pos[2]],
+                                  [0,                           0,                                                                      0,                                                                      1]])
+    projection_matrix = intrinsics.dot(extrinsics)
+
+
 def button_handler(index):
+    """Run when button of index i is pressed."""
     global background_image_index
     global blink_animation_frame
     global camera_fov
@@ -217,20 +218,23 @@ def button_handler(index):
 
 
 def change_input_state(index):
+    """Changes input state and rebuilds necessary control items. Use this to change input state."""
     global input_state
     input_state = index
     build_controls()
 
 
 def draw_axis():
+    """Draws an axis of size 1 at the origin. Red = x, Green = y, Blue = z."""
     draw_line((0, 0, 0), (1, 0, 0), (255, 0, 0))
     draw_line((0, 0, 0), (0, 1, 0), (0, 255, 0))
     draw_line((0, 0, 0), (0, 0, 1), (0, 0, 255))
 
 
-def draw_bounding_boxes(IgnoreCulling = False):
+def draw_bounding_boxes(ignore_culling = False):
+    """Draws all visible bounding boxes to screen. To override culled boxes set ignore_culling to True."""
     for i in range(0,len(boxes)):
-        if IgnoreCulling or boxes[i].truncated == 0:
+        if ignore_culling or boxes[i].truncated == 0:
             color = boxes[i].color_value
             if i == selected_box and blink_animation_frame < blink_animation_time:
                 color = C_WHITE
@@ -239,6 +243,7 @@ def draw_bounding_boxes(IgnoreCulling = False):
 
 
 def draw_controls():
+    """Draws bottom toolbar to the screen including updated buttons and text."""
     control_origin = (0,IMAGE_SIZE[1])
     control_size = (RENDER_SIZE[0], 102)
     pygame.draw.rect(render, C_BACKGROUND, (control_origin,control_size))
@@ -275,8 +280,8 @@ def draw_controls():
         render.blit(message, (pos[0] + 6, pos[1] + 2))
 
 
-# Draws a grid to the boundaries of the culling area every 1 unit
 def draw_grid():
+    """Draws a grid up to the boundaries of the culling area every 1 unit"""
     global  CULLING_AREA
     x_min = CULLING_AREA[0][0]
     x_max = CULLING_AREA[1][0]
@@ -289,14 +294,14 @@ def draw_grid():
 
 
 def draw_line(c1, c2, color):
-    draw_line_screen(get_screen_point(c1),get_screen_point(c2),color)
-
-
-def draw_line_screen(px1, px2, color):
+    """Draws a line between two 3d points of type (x,y,z)."""
+    px1 = get_screen_point(c1)
+    px2 = get_screen_point(c2)
     pygame.draw.line(render, color, px1, px2, LINE_WIDTH)
 
 
 def get_ground_point(point_2d):
+    """Returns a 3d point of (x,0,z) for screen pixel coordinate inputs."""
     global projection_matrix
     p_inv = np.linalg.inv(projection_matrix)  # Inverse of the projection matrix
     x = point_2d[0]
@@ -304,17 +309,19 @@ def get_ground_point(point_2d):
     z = (-p_inv[1][3]) / (x*p_inv[1][0] + y*p_inv[1][1] + p_inv[1][2])  # Finding depth buffer (assumes y3d = 0)
     x3d = x*z*p_inv[0][0] + y*z*p_inv[0][1] + z*p_inv[0][2] + p_inv[0][3]  # Some manual matrix math
     z3d = x*z*p_inv[2][0] + y*z*p_inv[2][1] + z*p_inv[2][2] + p_inv[2][3]
-    return -x3d, 0, z3d  # Remember to negate x to change handedness
+    return -x3d, 0, z3d  # Negates x to change handedness
 
 
 def get_screen_point(point_3d):
-    point = np.array([-point_3d[0], point_3d[1], point_3d[2], 1])
+    """Returns integer pixel coordinates for a 3d point input."""
+    point = np.array([-point_3d[0], point_3d[1], point_3d[2], 1])  # Negates x to change handedness
     point = projection_matrix.dot(point)
-    point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])
-    return math.floor(point_scaled[0]), math.floor(point_scaled[1])
+    point_scaled = np.array([point[0]/point[2],point[1]/point[2],1,1])  # Divides returned x and y values by depth
+    return math.floor(point_scaled[0]), math.floor(point_scaled[1])     # buffer to get pixel coordinates; takes floor
 
 
 def input_handler(event):
+    """All PyGame inputs are routed here."""
     global background_image_index
     global blink_animation_frame
     global ctrl_pressed
@@ -357,6 +364,7 @@ def input_handler(event):
     # ### Normal input routines ### #
     else:
         if event.type == pygame.MOUSEBUTTONDOWN:
+            # Left click: Box selection and button presses
             if pygame.mouse.get_pressed()[0]:
                 mouse_pressed = True
                 mouse_pos = pygame.mouse.get_pos()
@@ -396,22 +404,19 @@ def input_handler(event):
         elif event.type == pygame.MOUSEBUTTONUP:
             mouse_pressed = False
 
-    # ### James' mouse movement ### #
-    # TODO - Add to normal input routines above
-    if pygame.mouse.get_pressed()[2] == 1 and len(boxes) > 0:
-        # move box by right click
-        mouse_pos = pygame.mouse.get_pos()
-        mouse_x = mouse_pos[0]
-        mouse_y = mouse_pos[1]
-        point2d = [mouse_x, mouse_y]
-        x, y, z = get_ground_point(point2d)
-        location3d = [x, y, z]
-        boxes[selected_box].set_location(location3d)
+        # Right click: box movement
+        if pygame.mouse.get_pressed()[2] and len(boxes) > 0:
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_x = mouse_pos[0]
+            mouse_y = mouse_pos[1]
+            point2d = [mouse_x, mouse_y]
+            x, y, z = get_ground_point(point2d)
+            location3d = [x, y, z]
+            boxes[selected_box].set_location(location3d)
 
 
-
-# Adds a bounding box to the current frame based on several parameters
 def instantiate_box(index):
+    """Adds a bounding box to the current frame based on the default box parameters."""
     global blink_animation_frame
     global boxes
     global input_state
@@ -427,6 +432,7 @@ def instantiate_box(index):
 
 
 def is_not_culled(point):
+    """Returns True if given point is inside the culling area."""
     x = CULLING_AREA[0][0] <= point[0] <= CULLING_AREA[1][0]
     y = CULLING_AREA[0][1] <= point[1] <= CULLING_AREA[1][1]
     z = CULLING_AREA[0][2] <= point[2] <= CULLING_AREA[1][2]
@@ -434,6 +440,7 @@ def is_not_culled(point):
 
 
 def render_screen():
+    """Calls necessary functions to render screen in proper order."""
     if background_image is None:
         render.fill([0,0,0])
     else:
@@ -446,6 +453,7 @@ def render_screen():
 
 
 def set_background_image():
+    """Loads image from file using current background_image_index."""
     padding = ""
     while len(padding + str(background_image_index)) < 6:
         padding += "0"
