@@ -234,8 +234,12 @@ def draw_bounding_boxes(ignore_culling = False):
     for i in range(0,len(boxes)):
         if ignore_culling or boxes[i].truncated == 0:
             color = boxes[i].color_value
-            if i == selected_box and blink_animation_frame < blink_animation_time:
-                color = C_WHITE
+            if i == selected_box:
+                if blink_animation_frame < blink_animation_time:
+                    color = C_WHITE
+                marker_pos = get_screen_point(boxes[i].location)
+                marker_pos = (max(5,min(marker_pos[0],IMAGE_SIZE[0]-5)), max(5, min(marker_pos[1], IMAGE_SIZE[1]-5)))
+                pygame.draw.circle(render, color, marker_pos, 5, 1)
             for edge in BOX_EDGE_RENDER_ORDER:
                 draw_line(boxes[i].vertices[edge[0]],boxes[i].vertices[edge[1]],color)
 
