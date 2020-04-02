@@ -104,14 +104,12 @@ def button_handler(index):
             selected_box = len(boxes) - 1
         blink_animation_frame = 0
         message_text = "Selected box " + str(selected_box)
-        change_input_state(1)
     elif index == 9:  # Box Number --
         selected_box -= 1
         if selected_box < 0:
             selected_box = 0
         blink_animation_frame = 0
         message_text = "Selected box " + str(selected_box)
-        change_input_state(1)
 
     # Box controls
     if input_state == 1 and len(boxes) > 0:
@@ -405,7 +403,7 @@ def input_handler(event):
             mouse_pressed = False
 
         # Right click: box movement
-        if pygame.mouse.get_pressed()[2] and len(boxes) > 0:
+        elif pygame.mouse.get_pressed()[2] and len(boxes) > 0:
             mouse_pos = pygame.mouse.get_pos()
             mouse_x = mouse_pos[0]
             mouse_y = mouse_pos[1]
@@ -413,6 +411,45 @@ def input_handler(event):
             x, y, z = get_ground_point(point2d)
             location3d = [x, y, z]
             boxes[selected_box].set_location(location3d)
+
+        # Keyboard controls for box
+        elif event.type == pygame.KEYDOWN and input_state == 1:
+            if event.key == pygame.K_KP_PLUS or event.key == pygame.K_KP_EQUALS or event.key == pygame.K_EQUALS:
+                button_handler(2)   # Next frame
+            elif event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
+                button_handler(3)   # Prev Frame
+            elif event.key == pygame.K_z or event.key == pygame.K_PAGEDOWN:
+                button_handler(8)   # Prev object
+            elif event.key == pygame.K_x or event.key == pygame.K_PAGEUP:
+                button_handler(9)   # Next object
+            elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                button_handler(10)  # X+
+            elif event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                button_handler(11)  # X-
+            elif event.key == pygame.K_w or event.key == pygame.K_UP:
+                button_handler(12)  # Z+
+            elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                button_handler(13)  # Z-
+            elif event.key == pygame.K_e:
+                button_handler(14)  # R+
+            elif event.key == pygame.K_q:
+                button_handler(15)  # R-
+            elif event.key == pygame.K_i:
+                button_handler(16)  # L+
+            elif event.key == pygame.K_k:
+                button_handler(17)  # L-
+            elif event.key == pygame.K_l:
+                button_handler(18)  # W+
+            elif event.key == pygame.K_j:
+                button_handler(19)  # W-
+            elif event.key == pygame.K_o:
+                button_handler(20)  # H+
+            elif event.key == pygame.K_u:
+                button_handler(21)  # H-
+            elif event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
+                button_handler(22)  # Delete
+            elif event.key == pygame.K_p:
+                button_handler(23)  # Print
 
 
 def instantiate_box(index):
@@ -511,7 +548,7 @@ selected_box_input = 0
 background_image = None
 background_image_index = 1
 background_image_index_min = 1
-background_image_index_max = 1000
+background_image_index_max = 2000
 buttons = []
 ctrl_pressed = False
 input_state = 0  # Input states: 0 - Nothing selected, camera adjustments. 1 - Box selected, box adjustments. 2 - Input for frame no. 3 - Input for box no.
@@ -546,9 +583,9 @@ while True:
     elif input_state == 3:
         display_text = str(selected_box_input)
         if blink_animation_frame < blink_animation_time:
-            message_text = "Input frame number: " + display_text + "█"
+            message_text = "Input box number: " + display_text + "█"
         else:
-            message_text = "Input frame number: " + display_text
+            message_text = "Input box number: " + display_text
 
     # ### Render Screen ### #
     render_screen()
